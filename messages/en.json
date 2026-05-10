@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "title": "Lunara — AI Emotional Guidance",
+    "description": "AI emotional guidance for modern relationships. Talk with experts who understand love, communication, anxiety, attachment, and connection.",
+    "siteName": "Lunara"
+  },
+
+  "nav": {
+    "brand": "Lunara",
+    "home": "Home",
+    "chat": "Chat",
+    "language": "Language",
+    "login": "Sign In",
+    "signup": "Get Started"
+  },
+
+  "hero": {
+    "badge": "AI Emotional Guidance",
+    "title": "Relationships are complicated. You don't have to figure them out alone.",
+    "subtitle": "AI emotional guidance for modern relationships. Ask anything about love, communication, anxiety, attachment, or connection.",
+    "cta": "Talk with Liam",
+    "ctaSubtext": "Free to start. No registration needed."
+  },
+
+  "trust": {
+    "title": "A space where you feel understood",
+    "items": [
+      {
+        "title": "Psychology-Based Guidance",
+        "description": "Grounded in attachment theory, CBT frameworks, and relationship psychology research."
+      },
+      {
+        "title": "100% Anonymous & Private",
+        "description": "No personal data stored. Your conversations belong only to you."
+      },
+      {
+        "title": "Emotional Safe Space",
+        "description": "No judgment. No shame. Just honest, compassionate guidance."
+      },
+      {
+        "title": "Millions of Conversations Analyzed",
+        "description": "Trained on real relationship patterns across diverse experiences."
+      }
+    ]
+  },
+
+  "experts": {
+    "title": "The Relationship Advisory Circle",
+    "subtitle": "Four distinct perspectives. One goal: helping you build healthier relationships.",
+    "switchLabel": "Switch Expert",
+    "evan": {
+      "name": "Evan Pierce",
+      "role": "The Relationship Stabilizer",
+      "specialty": "Stabilization & Foundations",
+      "description": "Calm, rational, and structured. Evan helps you build a steady foundation and reduce conflict through clear communication and emotional stability.",
+      "tags": ["Building Security", "Conflict Reduction", "Daily Communication", "Emotional Stability"],
+      "color": "blue"
+    },
+    "liam": {
+      "name": "Liam Hart",
+      "role": "The Relationship Gardener",
+      "specialty": "Maintenance & Emotional Care",
+      "description": "Warm, supportive, and gently coaching. Liam helps you nurture your relationship day by day, keeping things soft, comfortable, and deeply connected.",
+      "tags": ["Daily Maintenance", "Emotional Lubrication", "Small Fixes", "Comfort & Ease"],
+      "color": "green"
+    },
+    "noah": {
+      "name": "Noah Sinclair",
+      "role": "The Attraction Strategist",
+      "specialty": "Attraction & Growth",
+      "description": "Insightful, sharp, and slightly playful. Noah helps you understand attraction dynamics, navigate ambiguity, and build magnetic connection.",
+      "tags": ["Attraction Building", "Ambiguity Navigation", "Chat Strategy", "Relationship Escalation"],
+      "color": "yellow"
+    },
+    "adrian": {
+      "name": "Dr. Adrian Cole",
+      "role": "The Relationship Intervention Specialist",
+      "specialty": "Crisis & Recovery",
+      "description": "Clinical yet deeply empathetic. Dr. Cole helps you think clearly when things fall apart — cold wars, trust breakdowns, and crisis navigation.",
+      "tags": ["Cold War Recovery", "Breakup Crisis", "Trust Analysis", "Rational Recovery"],
+      "color": "red"
+    }
+  },
+
+  "cases": {
+    "title": "Does this sound like you?",
+    "subtitle": "These are real emotional patterns people bring to Lunara every day. You are not alone in this.",
+    "items": [
+      {
+        "question": "Why does he suddenly become distant?",
+        "summary": "Sudden distance often signals unspoken emotional pressure, not loss of interest. Learn to read what's happening beneath the surface.",
+        "tag": "Mixed Signals"
+      },
+      {
+        "question": "Am I emotionally dependent?",
+        "summary": "Emotional dependency isn't weakness — it's a learned attachment pattern. Understand the difference between love and emotional reliance.",
+        "tag": "Attachment"
+      },
+      {
+        "question": "How do I stop overthinking in relationships?",
+        "summary": "Overthinking is your brain trying to protect you. But it can also sabotage connection. Learn to quiet the noise without ignoring your needs.",
+        "tag": "Anxiety"
+      },
+      {
+        "question": "Does she still like me?",
+        "summary": "Mixed signals are exhausting. Learn to read behavioral patterns instead of decoding every single message.",
+        "tag": "Uncertainty"
+      },
+      {
+        "question": "We keep having the same fight — what do I do?",
+        "summary": "Recurring conflicts are rarely about the surface topic. Discover the emotional pattern underneath and break the cycle.",
+        "tag": "Conflict"
+      },
+      {
+        "question": "How do I rebuild trust after it's been broken?",
+        "summary": "Trust isn't rebuilt in one conversation. It's rebuilt through consistent, predictable actions over time. Here's where to start.",
+        "tag": "Trust"
+      }
+    ]
+  },
+
+  "testimonials": {
+    "title": "What people are saying",
+    "items": [
+      {
+        "quote": "It feels like talking to someone who actually gets it. No scripts, no generic advice — just real understanding.",
+        "author": "Sarah, 24",
+        "context": "Navigating a complicated relationship"
+      },
+      {
+        "quote": "I was embarrassed to talk to friends about my relationship anxiety. Lunara gave me perspective without judgment.",
+        "author": "Marcus, 28",
+        "context": "Overcoming attachment anxiety"
+      },
+      {
+        "quote": "The different expert perspectives helped me see my situation from angles I never considered. It changed how I communicate.",
+        "author": "Jade, 22",
+        "context": "Improving communication patterns"
+      }
+    ]
+  },
+
+  "tips": {
+    "title": "Small shifts that make a difference",
+    "items": [
+      {
+        "title": "Name the emotion before reacting to it",
+        "description": "When you feel triggered, pause and say to yourself: 'I am feeling anxious right now.' Naming it reduces its power by up to 50%."
+      },
+      {
+        "title": "Use 'I feel' instead of 'You always'",
+        "description": "'You never listen' triggers defense. 'I feel unheard when...' invites conversation. Same need, different door."
+      },
+      {
+        "title": "Ask: 'What do you need right now?'",
+        "description": "Most relationship arguments are really about unmet needs disguised as surface complaints. Directly asking cuts through the noise."
+      },
+      {
+        "title": "The 24-hour rule for difficult conversations",
+        "description": "If something bothers you, wait 24 hours before bringing it up. If it still matters after a day, it's worth discussing calmly."
+      },
+      {
+        "title": "Curiosity over accusation",
+        "description": "Replace 'Why did you do that?' with 'Help me understand what happened.' The first triggers shame; the second invites honesty."
+      }
+    ]
+  },
+
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "items": [
+      {
+        "question": "Is Lunara a real therapist?",
+        "answer": "Lunara is an AI emotional guidance platform, not a licensed therapist. Our experts are AI personas trained on relationship psychology frameworks. They provide compassionate guidance and perspective — not clinical diagnosis or treatment."
+      },
+      {
+        "question": "Is my conversation really private?",
+        "answer": "Yes. We do not store your conversations on our servers. Your chats are private by design — no personal data is collected, and no conversation history is accessible to anyone but you."
+      },
+      {
+        "question": "Can I switch between experts?",
+        "answer": "Absolutely. You can switch between Evan, Liam, Noah, and Dr. Cole at any time during your conversation. Each brings a different perspective, and you can explore all four."
+      },
+      {
+        "question": "Is Lunara free?",
+        "answer": "Lunara offers free access to get started. We believe emotional guidance should be accessible to everyone. Premium features may be introduced in the future to support ongoing development."
+      },
+      {
+        "question": "What kind of relationship issues can I talk about?",
+        "answer": "You can talk about anything related to relationships: communication struggles, attachment anxiety, mixed signals, trust issues, conflict patterns, emotional distance, breakups, and more. All relationship types and situations are welcome."
+      }
+    ]
+  },
+
+  "footer": {
+    "tagline": "A space for your emotional world.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "contact": "Contact",
+    "copyright": "© 2025 Lunara. All rights reserved."
+  },
+
+  "chat": {
+    "newChat": "New Conversation",
+    "search": "Search conversations...",
+    "noConversations": "No conversations yet. Start talking.",
+    "inputPlaceholder": "Talk about your relationship...",
+    "send": "Send",
+    "typing": "Typing...",
+    "error": "Something went wrong. Please try again.",
+    "rateLimit": "You're sending messages too quickly. Please wait a moment.",
+    "retry": "Retry",
+    "notFound": "This conversation could not be found.",
+    "goBack": "Go back",
+    "chooseExpert": "Choose an expert to begin",
+    "switchExpert": "Switch expert",
+    "switchingExpert": "Switching to {name}...",
+    "currentExpert": "Currently talking to {name}"
+  },
+
+  "welcome": {
+    "liam": {
+      "greeting": "Hey there. I'm glad you're here.",
+      "role": "The Relationship Gardener",
+      "intro": "Relationships don't need to be perfect — they just need care. I'm here to help you nurture what matters, one small moment at a time. What's on your mind today?",
+      "suggestions": [
+        "How can I make my partner feel more appreciated?",
+        "We've been feeling distant lately — what can I do?",
+        "How do I bring up a difficult topic without starting a fight?"
+      ]
+    },
+    "evan": {
+      "greeting": "Welcome. Take a breath — you're in the right place.",
+      "role": "The Relationship Stabilizer",
+      "intro": "Stability isn't about avoiding conflict — it's about building something strong enough to handle it. Let's work through this together, calmly and clearly. What brings you here?",
+      "suggestions": [
+        "How do I stop small arguments from escalating?",
+        "What does a healthy relationship foundation look like?",
+        "How can I feel more secure in my relationship?"
+      ]
+    },
+    "noah": {
+      "greeting": "Hello. Ready to see things from a new angle?",
+      "role": "The Attraction Strategist",
+      "intro": "Attraction isn't magic — it's psychology, timing, and genuine connection. I'll help you understand the dynamics at play and make the moves that feel authentic to you. What's the situation?",
+      "suggestions": [
+        "How do I move things forward without being pushy?",
+        "How can I tell if the attraction is mutual?",
+        "What makes someone feel drawn to you naturally?"
+      ]
+    },
+    "adrian": {
+      "greeting": "Hello. I know this is hard. Let's think through it together.",
+      "role": "The Relationship Intervention Specialist",
+      "intro": "Crisis clouds judgment, but clarity is possible. I'll help you step back, understand what's really happening, and make decisions from a place of strength — not fear. Tell me what's going on.",
+      "suggestions": [
+        "How do I know if this relationship can be saved?",
+        "We're in a cold war — how do I break the silence?",
+        "How do I rebuild trust after a major breach?"
+      ]
+    }
+  }
+}
