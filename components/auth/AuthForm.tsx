@@ -6,6 +6,7 @@ import { useState, FormEvent } from 'react';
 import { authClient } from '@/lib/auth/client';
 
 export function AuthForm() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
@@ -19,7 +20,7 @@ export function AuthForm() {
 
     try {
       if (isSignUp) {
-        const { error } = await authClient.signUp.email({ email, password });
+        const { error } = await authClient.signUp.email({ name, email, password });
         if (error) {
           setMessage({ type: 'error', text: error.message || 'Sign up failed' });
         } else {
@@ -51,6 +52,20 @@ export function AuthForm() {
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          {isSignUp && (
+            <div>
+              <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-text-primary">Name</label>
+              <input
+                id="name"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                className="w-full rounded-[18px] border border-gray-200 bg-[#FAF7F2] px-5 py-3 text-sm text-text-primary placeholder-gray-400 outline-none transition-all focus:border-[#FF7A59]/40 focus:ring-2 focus:ring-[#FF7A59]/10"
+              />
+            </div>
+          )}
           <div>
             <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-text-primary">Email</label>
             <input
