@@ -2,12 +2,13 @@
 // /[lang]/chat/layout.tsx — 聊天路由 Auth 守卫布局
 // ============================================================
 // 功能：
-//   - 服务端校验 Supabase session
+//   - 服务端校验 Better Auth session
 //   - 未登录用户重定向到 /[lang]/auth/login
 //   - 已登录用户渲染子组件（聊天页）
 // ============================================================
 
-import { createServerSupabase } from '@/lib/supabase/server';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
@@ -22,13 +23,10 @@ export default async function ChatLayout({
   children: ReactNode;
   params: Promise<{ lang: string }>;
 }) {
-  const supabase = await createServerSupabase();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await auth.api.getSession({ headers: await headers() });
 
   // 未登录 → 重定向到登录页
-  if (!user) {
+  if (!session?.user) {
     const { lang } = await params;
     redirect(`/${lang}/auth/login`);
   }
