@@ -4,3 +4,4 @@
 
 export { ErrorBoundary } from './ErrorBoundary';
 export { Providers } from './Providers';
+export { NavbarClient } from './NavbarClient';
