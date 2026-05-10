@@ -13,7 +13,8 @@
     "login": "Sign In",
     "signup": "Get Started",
     "startChat": "Start Chat",
-    "logout": "Logout"
+    "logout": "Logout",
+    "userMenu": "User menu"
   },
 
   "hero": {

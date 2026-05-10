@@ -13,7 +13,8 @@
     "login": "登录",
     "signup": "开始使用",
     "startChat": "开始对话",
-    "logout": "退出登录"
+    "logout": "退出登录",
+    "userMenu": "用户菜单"
   },
 
   "hero": {

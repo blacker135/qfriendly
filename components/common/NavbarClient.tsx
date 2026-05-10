@@ -113,7 +113,7 @@ export function NavbarClient({ lang, user }: NavbarClientProps) {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 aria-expanded={dropdownOpen}
                 aria-haspopup="true"
-                aria-label={t('logout')}
+                aria-label={t('userMenu')}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF7A59] text-sm font-medium text-white hover:bg-[#FF7A59]/90 transition-colors"
               >
                 {avatarLetter}
