@@ -9,6 +9,7 @@ import {
   uuid,
   boolean,
   pgEnum,
+  index,
 } from 'drizzle-orm/pg-core';
 
 // ============================================================
@@ -102,4 +103,7 @@ export const messages = pgTable('messages', {
   role: roleEnum('role').notNull(),
   content: text('content').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
-});
+}, (table) => ({
+  conversationIdx: index('idx_messages_conversation').on(table.conversationId),
+  conversationCreatedIdx: index('idx_messages_conv_created').on(table.conversationId, table.createdAt),
+}));
