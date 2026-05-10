@@ -49,16 +49,31 @@ export function NavbarClient({ lang, user }: NavbarClientProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Escape 键关闭下拉菜单（键盘无障碍）
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape' && dropdownOpen) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [dropdownOpen]);
+
   const handleLogout = async () => {
-    await authClient.signOut();
-    window.location.href = `/${lang}`;
+    try {
+      await authClient.signOut();
+    } catch (err) {
+      console.error('Logout failed:', err);
+    } finally {
+      window.location.href = `/${lang}`;
+    }
   };
 
-  // 用户头像字母（取 name 首字母或 email 首字母大写）
-  const avatarLetter =
-    user?.name?.charAt(0).toUpperCase() ||
-    user?.email.charAt(0).toUpperCase() ||
-    '?';
+  // 用户头像字母（取 name 首字母或 email 首字母大写，空值兜底为 ?）
+  const avatarLetter = user
+    ? (user.name?.charAt(0) || user.email.charAt(0)).toUpperCase() || '?'
+    : '?';
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md">
@@ -96,19 +111,23 @@ export function NavbarClient({ lang, user }: NavbarClientProps) {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
+                aria-expanded={dropdownOpen}
+                aria-haspopup="true"
+                aria-label={t('logout')}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF7A59] text-sm font-medium text-white hover:bg-[#FF7A59]/90 transition-colors"
               >
                 {avatarLetter}
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 rounded-[16px] bg-white py-2 shadow-soft border border-gray-100">
+                <div role="menu" className="absolute right-0 top-full mt-2 w-48 rounded-[16px] bg-white py-2 shadow-soft border border-gray-100">
                   <div className="px-4 py-2 text-sm text-[#777777] truncate">
                     {user.name || user.email}
                   </div>
                   <div className="my-1 border-t border-gray-100" />
                   <button
                     onClick={handleLogout}
+                    role="menuitem"
                     className="w-full px-4 py-2 text-left text-sm text-[#777777] hover:bg-gray-50 hover:text-[#FF7A59] transition-colors"
                   >
                     {t('logout')}
