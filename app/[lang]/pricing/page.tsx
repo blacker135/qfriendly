@@ -29,9 +29,12 @@ export default async function PricingPage({
     proYearly: process.env.LEMONSQUEEZY_VARIANT_PRO_YEARLY || '',
     ultraMonthly: process.env.LEMONSQUEEZY_VARIANT_ULTRA_MONTHLY || '',
     ultraYearly: process.env.LEMONSQUEEZY_VARIANT_ULTRA_YEARLY || '',
-    starterOnetime: process.env.LEMONSQUEEZY_VARIANT_STARTER_ONETIME || '',
-    proOnetime: process.env.LEMONSQUEEZY_VARIANT_PRO_ONETIME || '',
-    ultraOnetime: process.env.LEMONSQUEEZY_VARIANT_ULTRA_ONETIME || '',
+    starterMonthlyDomestic: process.env.LEMONSQUEEZY_VARIANT_STARTER_MONTHLY_DOMESTIC || '',
+    starterYearlyDomestic: process.env.LEMONSQUEEZY_VARIANT_STARTER_YEARLY_DOMESTIC || '',
+    proMonthlyDomestic: process.env.LEMONSQUEEZY_VARIANT_PRO_MONTHLY_DOMESTIC || '',
+    proYearlyDomestic: process.env.LEMONSQUEEZY_VARIANT_PRO_YEARLY_DOMESTIC || '',
+    ultraMonthlyDomestic: process.env.LEMONSQUEEZY_VARIANT_ULTRA_MONTHLY_DOMESTIC || '',
+    ultraYearlyDomestic: process.env.LEMONSQUEEZY_VARIANT_ULTRA_YEARLY_DOMESTIC || '',
     test: process.env.LEMONSQUEEZY_VARIANT_TEST || '',
   };
 
