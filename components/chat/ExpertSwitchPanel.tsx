@@ -27,6 +27,8 @@ interface ExpertSwitchPanelProps {
   onClose: () => void;
   /** 当前选中的专家标识符 */
   currentExpert: string;
+  /** 订阅状态（用于专家锁定判断） */
+  subscriptionStatus?: { subscribed: boolean; variant: string | null } | null;
 }
 
 
@@ -38,6 +40,7 @@ export function ExpertSwitchPanel({
   onSelect,
   onClose,
   currentExpert,
+  subscriptionStatus,
 }: ExpertSwitchPanelProps) {
   const t = useTranslations('chat');
   const te = useTranslations('experts');
@@ -109,16 +112,24 @@ export function ExpertSwitchPanel({
             {expertIds.map((id) => {
               const meta = EXPERT_META[id];
               const isActive = currentExpert === id;
+              const isLocked = subscriptionStatus?.subscribed
+                && subscriptionStatus?.variant === 'starter'
+                && (id === 'noah' || id === 'adrian');
 
               return (
                 <button
                   key={id}
                   type="button"
-                  onClick={() => onSelect(id)}
+                  onClick={() => {
+                    if (isLocked) return;
+                    onSelect(id);
+                  }}
                   className={`flex w-full items-center gap-4 rounded-[20px] border-2 p-4 text-left transition-all ${
                     isActive
                       ? 'border-[#FF7A59] bg-[#FF7A59]/5'
-                      : 'border-transparent bg-[#FAF7F2] hover:bg-gray-100'
+                      : isLocked
+                        ? 'border-transparent bg-gray-100 opacity-50 cursor-not-allowed'
+                        : 'border-transparent bg-[#FAF7F2] hover:bg-gray-100'
                   }`}
                 >
                   {/* Emoji 圆形头像 */}
@@ -143,6 +154,11 @@ export function ExpertSwitchPanel({
                       {te(`${id}.description`)}
                     </p>
                   </div>
+                  {isLocked && (
+                    <span className="ml-auto flex-shrink-0 text-xs text-[#FF7A59]">
+                      Upgrade
+                    </span>
+                  )}
                 </button>
               );
             })}

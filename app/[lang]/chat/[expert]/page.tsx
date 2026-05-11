@@ -51,6 +51,30 @@ export default function ChatPageClient() {
   const [sending, setSending] = useState(false);
   const [sidebarRefreshKey, setSidebarRefreshKey] = useState(0);
 
+  // ---------- 订阅状态 ----------
+  const [subscriptionStatus, setSubscriptionStatus] = useState<{
+    subscribed: boolean;
+    variant: string | null;
+    trialUsed: number;
+    trialLimit: number;
+  } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/subscription/status')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error) {
+          setSubscriptionStatus({
+            subscribed: data.subscribed,
+            variant: data.variant,
+            trialUsed: data.trial_used,
+            trialLimit: data.trial_limit,
+          });
+        }
+      })
+      .catch((err) => console.error('Failed to load subscription status:', err));
+  }, []);
+
   // ---------- 处理 URL 预填问题 ----------
   useEffect(() => {
     const q = searchParams.get('q');
@@ -98,6 +122,12 @@ export default function ChatPageClient() {
     async (message: string) => {
       if (!message.trim() || sending) return;
 
+      // ---------- 试用门控 ----------
+      if (subscriptionStatus && !subscriptionStatus.subscribed && subscriptionStatus.trialUsed >= subscriptionStatus.trialLimit) {
+        setError('你已用完 3 条免费消息，请订阅后继续。');
+        return;
+      }
+
       // 清除之前的错误状态
       setError(null);
       setRateLimited(false);
@@ -108,6 +138,18 @@ export default function ChatPageClient() {
       setMessages((prev) => [...prev, userMsg]);
 
       try {
+        // ---------- 递增试用计数（未订阅用户）----------
+        if (subscriptionStatus && !subscriptionStatus.subscribed) {
+          fetch('/api/subscription/trial', { method: 'PATCH' })
+            .then((res) => res.json())
+            .then((data) => {
+              setSubscriptionStatus((prev) =>
+                prev ? { ...prev, trialUsed: data.trial_used } : prev
+              );
+            })
+            .catch(() => {});
+        }
+
         // 调用 SSE 流式对话 API
         const res = await fetch('/api/chat', {
           method: 'POST',
@@ -394,6 +436,7 @@ export default function ChatPageClient() {
           messages={messages}
           expert={currentExpert}
           onSuggestionClick={(text) => handleSend(text)}
+          subscriptionStatus={subscriptionStatus}
         />
 
         {/* 底部输入区域 */}
@@ -406,6 +449,7 @@ export default function ChatPageClient() {
           onSelect={handleSwitchExpert}
           onClose={() => setExpertPanelOpen(false)}
           currentExpert={currentExpert}
+          subscriptionStatus={subscriptionStatus}
         />
       )}
     </div>

@@ -101,6 +101,12 @@ export function NavbarClient({ lang, user }: NavbarClientProps) {
             >
               {t('startChat')}
             </Link>
+            <Link
+              href={`/${lang}/pricing`}
+              className="text-[#777777] hover:text-[#2B2B2B] transition-colors"
+            >
+              {t('pricing')}
+            </Link>
           </div>
         )}
 

@@ -10,6 +10,9 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { MessageBubble } from './MessageBubble';
 import { WelcomeCard } from './WelcomeCard';
 
@@ -27,6 +30,8 @@ interface MessageListProps {
   expert: string;
   /** 建议问题点击回调（传入 WelcomeCard） */
   onSuggestionClick?: (text: string) => void;
+  /** 订阅状态（用于试用横幅） */
+  subscriptionStatus?: { subscribed: boolean; trialUsed: number; trialLimit: number } | null;
 }
 
 /**
@@ -37,7 +42,13 @@ export function MessageList({
   messages,
   expert,
   onSuggestionClick,
+  subscriptionStatus,
 }: MessageListProps) {
+  // ---------- 翻译 & 语言 ----------
+  const tp = useTranslations('pricing');
+  const pathname = usePathname();
+  const lang = pathname.startsWith('/zh') ? 'zh' : 'en';
+
   // ---------- 滚动锚点引用 ----------
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -64,6 +75,20 @@ export function MessageList({
       {messages.map((msg, index) => (
         <MessageBubble key={index} role={msg.role} content={msg.content} />
       ))}
+      {/* 试用横幅 — 未订阅且未用完试用消息时显示 */}
+      {subscriptionStatus && !subscriptionStatus.subscribed && subscriptionStatus.trialUsed < subscriptionStatus.trialLimit && (
+        <div className="mx-4 mt-3 rounded-[12px] bg-[#FF7A59]/5 border border-[#FF7A59]/20 px-4 py-3 text-center lg:mx-6">
+          <span className="text-sm text-text-secondary">
+            {tp('trialBanner', { used: subscriptionStatus.trialUsed, limit: subscriptionStatus.trialLimit })}
+          </span>
+          <Link
+            href={`/${lang}/pricing`}
+            className="ml-1 text-sm font-medium text-[#FF7A59] hover:underline"
+          >
+            {tp('trialLink')}
+          </Link>
+        </div>
+      )}
       {/* 滚动锚点 — 始终在列表末尾，新消息到达时滚动至此 */}
       <div ref={bottomRef} />
     </div>
