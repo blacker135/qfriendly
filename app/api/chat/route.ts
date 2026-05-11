@@ -10,6 +10,11 @@ import type { ExpertId, Language } from '@/lib/prompts/experts';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
+/**
+ * 单实例速率限制（内存 Map）
+ * 注意：Vercel serverless 多实例间不共享，实际限制 = 10 × 实例数
+ * 长期方案需接入分布式限流（如 Upstash Redis）
+ */
 function checkRateLimit(userId: string): boolean {
   const now = Date.now();
   const entry = rateLimitMap.get(userId);
@@ -32,14 +37,7 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Rate limit exceeded' }, { status: 429 });
   }
 
-  // ---------- 订阅门控：检查试用剩余 ----------
-  const [profile] = await db
-    .select({ trialUsed: schema.profiles.trialUsed })
-    .from(schema.profiles)
-    .where(eq(schema.profiles.userId, session.user.id));
-
-  const trialUsed = profile?.trialUsed || 0;
-
+  // ---------- 订阅门控：事务原子 trial 检查 + 订阅查询 ----------
   const [subscription] = await db
     .select({ variant: schema.subscriptions.variantName, status: schema.subscriptions.status })
     .from(schema.subscriptions)
@@ -48,11 +46,47 @@ export async function POST(request: Request) {
   const isSubscribed = subscription && subscription.status === 'active';
   const variant = subscription?.variant || null;
 
-  if (!isSubscribed && trialUsed >= 3) {
-    return Response.json({
-      error: 'Trial exhausted',
-      code: 'TRIAL_EXHAUSTED',
-    }, { status: 402 });
+  // 未订阅用户：事务内原子递增 trial 计数，防止并发绕过
+  let trialUsed = 0;
+  if (!isSubscribed) {
+    const trialResult = await db.transaction(async (tx) => {
+      const [profile] = await tx
+        .select({ trialUsed: schema.profiles.trialUsed })
+        .from(schema.profiles)
+        .where(eq(schema.profiles.userId, session.user.id))
+        .for('update');
+
+      const current = profile?.trialUsed || 0;
+
+      if (current >= 3) {
+        return { allowed: false, trialUsed: current };
+      }
+
+      if (!profile) {
+        await tx.insert(schema.profiles).values({
+          userId: session.user.id,
+          trialUsed: 1,
+        });
+      } else {
+        await tx
+          .update(schema.profiles)
+          .set({ trialUsed: current + 1 })
+          .where(eq(schema.profiles.userId, session.user.id));
+      }
+
+      return { allowed: true, trialUsed: current + 1 };
+    });
+
+    trialUsed = trialResult.trialUsed;
+
+    if (!trialResult.allowed) {
+      return Response.json({
+        error: 'Trial exhausted',
+        code: 'TRIAL_EXHAUSTED',
+        trial_used: trialUsed,
+        trial_limit: 3,
+      }, { status: 402 });
+    }
   }
 
   let body: { conversation_id?: string; expert?: string; message?: string; language?: string };
