@@ -19,9 +19,17 @@ interface NavbarSessionUser {
   email: string;
 }
 
+/** 服务端传来的订阅数据 */
+interface NavbarMembership {
+  variant: string;
+  status: string;
+  currentPeriodEnd: string | null;
+}
+
 interface NavbarClientProps {
   lang: string;
   user: NavbarSessionUser | null;
+  membership?: NavbarMembership | null;
 }
 
 /**
