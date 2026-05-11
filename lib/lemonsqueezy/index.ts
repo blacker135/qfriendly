@@ -20,12 +20,22 @@ const VARIANT_MAP: Record<string, VariantName> = {};
  */
 function initVariantMap() {
   const pairs: [string | undefined, VariantName][] = [
+    // 国外（自动续费）
     [process.env.LEMONSQUEEZY_VARIANT_STARTER_MONTHLY, 'starter'],
     [process.env.LEMONSQUEEZY_VARIANT_STARTER_YEARLY, 'starter'],
     [process.env.LEMONSQUEEZY_VARIANT_PRO_MONTHLY, 'pro'],
     [process.env.LEMONSQUEEZY_VARIANT_PRO_YEARLY, 'pro'],
     [process.env.LEMONSQUEEZY_VARIANT_ULTRA_MONTHLY, 'ultra'],
     [process.env.LEMONSQUEEZY_VARIANT_ULTRA_YEARLY, 'ultra'],
+    // 国内（手动续费）
+    [process.env.LEMONSQUEEZY_VARIANT_STARTER_MONTHLY_DOMESTIC, 'starter'],
+    [process.env.LEMONSQUEEZY_VARIANT_STARTER_YEARLY_DOMESTIC, 'starter'],
+    [process.env.LEMONSQUEEZY_VARIANT_PRO_MONTHLY_DOMESTIC, 'pro'],
+    [process.env.LEMONSQUEEZY_VARIANT_PRO_YEARLY_DOMESTIC, 'pro'],
+    [process.env.LEMONSQUEEZY_VARIANT_ULTRA_MONTHLY_DOMESTIC, 'ultra'],
+    [process.env.LEMONSQUEEZY_VARIANT_ULTRA_YEARLY_DOMESTIC, 'ultra'],
+    // 测试方案
+    [process.env.LEMONSQUEEZY_VARIANT_TEST, 'starter'],
   ];
   for (const [id, name] of pairs) {
     if (id) VARIANT_MAP[id] = name;

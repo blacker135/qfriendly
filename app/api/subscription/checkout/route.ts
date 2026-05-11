@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  let body: { variant_id?: string };
+  let body: { variant_id?: string; redirect_url?: string };
   try {
     body = await request.json();
   } catch {
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const url = await createCheckout(body.variant_id, session.user.id);
+    const url = await createCheckout(body.variant_id, session.user.id, body.redirect_url);
     return Response.json({ url });
   } catch (err) {
     console.error('Checkout creation failed:', err);

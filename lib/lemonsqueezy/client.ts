@@ -34,7 +34,11 @@ async function lsRequest(path: string, options: RequestInit = {}): Promise<any> 
  * @param userId - 当前登录用户 ID
  * @returns Checkout URL，前端应重定向到该地址完成支付
  */
-export async function createCheckout(variantId: string, userId: string): Promise<string> {
+export async function createCheckout(
+  variantId: string,
+  userId: string,
+  redirectUrl?: string,
+): Promise<string> {
   const storeId = process.env.LEMONSQUEEZY_STORE_ID;
 
   const body = {
@@ -45,7 +49,7 @@ export async function createCheckout(variantId: string, userId: string): Promise
           custom: { user_id: userId },
         },
         product_options: {
-          redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/chat/liam`,
+          redirect_url: redirectUrl || `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
         },
       },
       relationships: {
