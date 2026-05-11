@@ -138,18 +138,6 @@ export default function ChatPageClient() {
       setMessages((prev) => [...prev, userMsg]);
 
       try {
-        // ---------- 递增试用计数（未订阅用户）----------
-        if (subscriptionStatus && !subscriptionStatus.subscribed) {
-          fetch('/api/subscription/trial', { method: 'PATCH' })
-            .then((res) => res.json())
-            .then((data) => {
-              setSubscriptionStatus((prev) =>
-                prev ? { ...prev, trialUsed: data.trial_used } : prev
-              );
-            })
-            .catch(() => {});
-        }
-
         // 调用 SSE 流式对话 API
         const res = await fetch('/api/chat', {
           method: 'POST',
@@ -168,6 +156,21 @@ export default function ChatPageClient() {
           setError('发送太快了，请稍等片刻再试。'); // Sending too fast
           // 移除已添加的用户消息（乐观更新回滚）
           setMessages((prev) => prev.filter((m) => m !== userMsg));
+          return;
+        }
+
+        // 试用已耗尽 (402 Payment Required)
+        if (res.status === 402) {
+          setSubscriptionStatus((prev) =>
+            prev ? { ...prev, trialUsed: prev.trialLimit } : prev
+          );
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: '你已用完 3 条免费消息，请订阅后继续。',
+            },
+          ]);
           return;
         }
 
