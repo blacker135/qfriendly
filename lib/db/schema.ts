@@ -75,6 +75,7 @@ export const subscriptionStatusEnum = pgEnum('subscription_status', [
   'active',
   'cancelled',
   'expired',
+  'suspended',
 ]);
 
 export const subscriptions = pgTable('subscriptions', {
@@ -130,6 +131,7 @@ export const messages = pgTable('messages', {
     .references(() => conversations.id, { onDelete: 'cascade' }),
   role: roleEnum('role').notNull(),
   content: text('content').notNull(),
+  tokens: integer('tokens'),
   createdAt: timestamp('created_at').defaultNow(),
 }, (table) => ({
   conversationIdx: index('idx_messages_conversation').on(table.conversationId),
