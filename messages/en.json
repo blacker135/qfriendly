@@ -426,5 +426,41 @@
         }
       ]
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "account": "Account",
+    "security": "Security",
+    "subscription": "Subscription",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "edit": "Edit",
+    "change": "Change",
+    "save": "Save",
+    "cancel": "Cancel",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "changePassword": "Change Password",
+    "newName": "New Name",
+    "newEmail": "New Email",
+    "emailHint": "A verification email will be sent to your new address.",
+    "plan": "Plan",
+    "status": "Status",
+    "expires": "Expires",
+    "messages": "Messages",
+    "perDay": "per day",
+    "unlimited": "Unlimited",
+    "manageSubscription": "Manage Subscription",
+    "logout": "Logout",
+    "active": "Active",
+    "suspended": "Suspended",
+    "cancelled": "Cancelled",
+    "expired": "Expired",
+    "passwordChanged": "Password changed successfully",
+    "nameUpdated": "Name updated successfully",
+    "emailSent": "Verification email sent",
+    "error": "Something went wrong"
   }
 }

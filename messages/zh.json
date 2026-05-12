@@ -425,5 +425,41 @@
         }
       ]
     }
+  },
+  "settings": {
+    "title": "设置",
+    "account": "账户",
+    "security": "安全",
+    "subscription": "订阅",
+    "name": "名称",
+    "email": "邮箱",
+    "password": "密码",
+    "edit": "编辑",
+    "change": "修改",
+    "save": "保存",
+    "cancel": "取消",
+    "currentPassword": "当前密码",
+    "newPassword": "新密码",
+    "confirmPassword": "确认密码",
+    "changePassword": "修改密码",
+    "newName": "新名称",
+    "newEmail": "新邮箱",
+    "emailHint": "验证邮件将发送至您的新邮箱地址。",
+    "plan": "方案",
+    "status": "状态",
+    "expires": "到期",
+    "messages": "消息",
+    "perDay": "条/天",
+    "unlimited": "无限制",
+    "manageSubscription": "管理订阅",
+    "logout": "退出登录",
+    "active": "活跃",
+    "suspended": "已暂停",
+    "cancelled": "已取消",
+    "expired": "已过期",
+    "passwordChanged": "密码修改成功",
+    "nameUpdated": "名称更新成功",
+    "emailSent": "验证邮件已发送",
+    "error": "操作失败，请重试"
   }
 }
