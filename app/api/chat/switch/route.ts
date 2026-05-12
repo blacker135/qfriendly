@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { db, schema } from '@/lib/db';
 import { eq, asc, count } from 'drizzle-orm';
+import { checkTrialAccess } from '@/lib/subscription/gate';
 import { createDeepSeekClient } from '@/lib/deepseek/client';
 import { getSwitchPrompt, getWelcomeMessage, getExpertInfo } from '@/lib/prompts/experts';
 import type { ExpertId, Language } from '@/lib/prompts/experts';
@@ -36,6 +37,41 @@ export async function POST(request: Request) {
   if (!language || !validLanguages.includes(language as Language)) {
     return Response.json({ error: 'Invalid language' }, { status: 400 });
   }
+
+  // ---- 订阅门控 ----
+  const [subscription] = await db
+    .select({ variant: schema.subscriptions.variantName, status: schema.subscriptions.status })
+    .from(schema.subscriptions)
+    .where(eq(schema.subscriptions.userId, session.user.id));
+
+  const isSubscribed = subscription && subscription.status === 'active';
+  const variant = subscription?.variant || null;
+
+  // 未订阅用户：原子 trial 检查
+  if (!isSubscribed) {
+    const trialResult = await checkTrialAccess(session.user.id);
+    if (!trialResult.allowed) {
+      return Response.json({
+        error: 'Trial exhausted',
+        code: 'TRIAL_EXHAUSTED',
+        trial_used: trialResult.trialUsed,
+        trial_limit: trialResult.trialLimit,
+      }, { status: 402 });
+    }
+  }
+
+  // Starter 用户：仅开放 Evan 和 Liam
+  if (isSubscribed && variant === 'starter') {
+    const starterExperts: ExpertId[] = ['evan', 'liam'];
+    if (!starterExperts.includes(new_expert as ExpertId)) {
+      return Response.json({
+        error: 'Expert locked',
+        code: 'EXPERT_LOCKED',
+        message: 'Upgrade to Pro or Ultra to unlock all experts.',
+      }, { status: 403 });
+    }
+  }
+  // ---- 门控结束 ----
 
   const [conversation] = await db
     .select()
