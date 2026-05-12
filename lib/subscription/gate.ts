@@ -1,12 +1,40 @@
 // lib/subscription/gate.ts
-// 订阅门控：trial 原子检查 + 订阅状态查询
-// 通过 PostgreSQL 事务 + SELECT FOR UPDATE 保证并发安全
+// 订阅门控：统一检查 trial + 订阅状态 + 专家锁定
+// 供 chat 和 switch 路由复用
 
 import { db, schema } from '@/lib/db';
-import { eq } from 'drizzle-orm';
+import { eq, and, gte, count } from 'drizzle-orm';
+import type { ExpertId } from '@/lib/prompts/experts';
 
 /** 试用消息上限 */
 const TRIAL_LIMIT = 3;
+
+/** 日限额配置 */
+const DAILY_LIMITS: Record<string, number> = {
+  starter: 30,
+  pro: 100,
+};
+
+/** Starter 可访问的专家 */
+const STARTER_EXPERTS: ExpertId[] = ['evan', 'liam'];
+
+/** 允许通过的结果 */
+interface GateAllowed {
+  allowed: true;
+  isSubscribed: boolean;
+  variant: string | null;
+  trialUsed: number;
+}
+
+/** 拒绝的结果 */
+interface GateDenied {
+  allowed: false;
+  code: 'TRIAL_EXHAUSTED' | 'DAILY_LIMIT' | 'EXPERT_LOCKED';
+  status: 402 | 429 | 403;
+  message: string;
+}
+
+export type GateResult = GateAllowed | GateDenied;
 
 export interface TrialResult {
   allowed: boolean;
@@ -16,28 +44,21 @@ export interface TrialResult {
 
 /**
  * 试用消息原子检查与递增
- * 未订阅用户每次发消息时调用，通过行锁防止并发绕过试用限制。
- *
- * 并发安全策略：先插入哨兵行（计数=0），再统一走 UPDATE + 1 的分支归一路径。
- * 避免两个并发请求都 SELECT FOR UPDATE 无行 → 一方 INSERT 后另一方 onConflictDoNothing
- * 重读得到旧值却未递增的漏增问题。
+ * 通过 PostgreSQL 事务 + SELECT FOR UPDATE 保证并发安全
  */
 export async function checkTrialAccess(userId: string): Promise<TrialResult> {
   const result = await db.transaction(async (tx) => {
-    // 确保 profile 行存在（无则插入哨兵行，计数=0）
     await tx
       .insert(schema.profiles)
       .values({ userId, trialUsed: 0 })
       .onConflictDoNothing({ target: schema.profiles.userId });
 
-    // 统一路径：锁定后读取 → 判断 → 递增
     const [profile] = await tx
       .select({ trialUsed: schema.profiles.trialUsed })
       .from(schema.profiles)
       .where(eq(schema.profiles.userId, userId))
       .for('update');
 
-    // 此时行一定存在（刚刚插入哨兵行或已存在），但 Drizzle 类型推断 trialUsed 可为 null
     const current = profile!.trialUsed ?? 0;
     if (current >= TRIAL_LIMIT) {
       return { allowed: false, trialUsed: current, trialLimit: TRIAL_LIMIT };
@@ -53,4 +74,100 @@ export async function checkTrialAccess(userId: string): Promise<TrialResult> {
   });
 
   return result;
+}
+
+/**
+ * 订阅门控统一检查
+ * 按顺序检查：trial → 专家锁定 → 日限额
+ *
+ * @param userId - 用户 ID
+ * @param expert - 当前请求的专家 ID
+ * @param trial - 试用模式：'consume' 吞并计数 | 'peek' 只读检查
+ */
+export async function checkSubscriptionGate(
+  userId: string,
+  expert: ExpertId,
+  trial: 'consume' | 'peek',
+): Promise<GateResult> {
+  // 1. 查询订阅状态
+  const [subscription] = await db
+    .select({ variant: schema.subscriptions.variantName, status: schema.subscriptions.status })
+    .from(schema.subscriptions)
+    .where(eq(schema.subscriptions.userId, userId));
+
+  const isSubscribed = !!subscription && subscription.status === 'active';
+  const variant = subscription?.variant || null;
+
+  // 2. 未订阅 → trial 检查
+  if (!isSubscribed) {
+    if (trial === 'consume') {
+      const tr = await checkTrialAccess(userId);
+      if (!tr.allowed) {
+        return {
+          allowed: false,
+          code: 'TRIAL_EXHAUSTED',
+          status: 402,
+          message: `Trial exhausted: ${tr.trialUsed}/${tr.trialLimit}`,
+        };
+      }
+      return { allowed: true, isSubscribed: false, variant: null, trialUsed: tr.trialUsed };
+    }
+
+    // peek 模式：只读 trial 检查
+    const [profile] = await db
+      .select({ trialUsed: schema.profiles.trialUsed })
+      .from(schema.profiles)
+      .where(eq(schema.profiles.userId, userId));
+
+    const trialUsed = profile?.trialUsed || 0;
+    if (trialUsed >= TRIAL_LIMIT) {
+      return {
+        allowed: false,
+        code: 'TRIAL_EXHAUSTED',
+        status: 402,
+        message: `Trial exhausted: ${trialUsed}/${TRIAL_LIMIT}`,
+      };
+    }
+    return { allowed: true, isSubscribed: false, variant: null, trialUsed };
+  }
+
+  // 3. 已订阅 → 专家锁定检查
+  if (variant === 'starter' && !STARTER_EXPERTS.includes(expert)) {
+    return {
+      allowed: false,
+      code: 'EXPERT_LOCKED',
+      status: 403,
+      message: 'Upgrade to Pro or Ultra to unlock this expert.',
+    };
+  }
+
+  // 4. 已订阅 → 日限额检查（Ultra 无限制）
+  if (variant === 'starter' || variant === 'pro') {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const [result] = await db
+      .select({ count: count() })
+      .from(schema.messages)
+      .innerJoin(schema.conversations, eq(schema.messages.conversationId, schema.conversations.id))
+      .where(
+        and(
+          eq(schema.conversations.userId, userId),
+          eq(schema.messages.role, 'user'),
+          gte(schema.messages.createdAt, todayStart),
+        ),
+      );
+
+    const limit = DAILY_LIMITS[variant];
+    if ((result?.count || 0) >= limit) {
+      return {
+        allowed: false,
+        code: 'DAILY_LIMIT',
+        status: 429,
+        message: `Daily limit reached: ${limit} messages per day.`,
+      };
+    }
+  }
+
+  return { allowed: true, isSubscribed: true, variant, trialUsed: 0 };
 }
