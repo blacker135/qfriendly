@@ -41,7 +41,7 @@ export default function ProjectStatsPage() {
         <StatCard title="DAU" value={data.dauSeries[data.dauSeries.length - 1]?.value ?? 0} />
         <StatCard title="总对话数" value={data.totalConversations} />
         <StatCard title="总消息数" value={data.totalMessages} />
-        <StatCard title="留存率(D1)" value={`${data.retention.d1?.[0]?.rate?.toFixed(1) ?? 0}%`} />
+        <StatCard title="留存率(D1)" value={`${(data.retention.d1 ?? 0).toFixed(1)}%`} />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -50,7 +50,7 @@ export default function ProjectStatsPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <RetentionChart d1={data.retention.d1} d7={data.retention.d7} d30={data.retention.d30} />
+        <RetentionChart d1Rate={data.retention.d1 ?? 0} d7Rate={data.retention.d7 ?? 0} d30Rate={data.retention.d30 ?? 0} />
         <PaymentChart
           dates={data.paymentSeries.dates}
           paymentTotal={data.paymentSeries.paymentTotal}

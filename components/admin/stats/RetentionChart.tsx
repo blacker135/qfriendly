@@ -5,16 +5,16 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface RetentionChartProps {
-  d1: { dayN: number; rate: number }[];
-  d7: { dayN: number; rate: number }[];
-  d30: { dayN: number; rate: number }[];
+  d1Rate: number;
+  d7Rate: number;
+  d30Rate: number;
 }
 
-export default function RetentionChart({ d1, d7, d30 }: RetentionChartProps) {
+export default function RetentionChart({ d1Rate, d7Rate, d30Rate }: RetentionChartProps) {
   const data = [
-    { name: 'D1', rate: d1[0]?.rate ?? 0 },
-    { name: 'D7', rate: d7[0]?.rate ?? 0 },
-    { name: 'D30', rate: d30[0]?.rate ?? 0 },
+    { name: 'D1', rate: d1Rate },
+    { name: 'D7', rate: d7Rate },
+    { name: 'D30', rate: d30Rate },
   ];
 
   return (

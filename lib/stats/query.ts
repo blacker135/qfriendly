@@ -128,7 +128,7 @@ export async function queryPaymentSeries(range: DateRange): Promise<{
   paymentRate: number[];
 }> {
   const result = await db.execute<{ date: string; metricKey: string; value: number }>(
-    sql`SELECT date::text, metric_key, metric_value::numeric as value
+    sql`SELECT date::text, metric_key as "metricKey", metric_value::numeric as value
         FROM analytics_daily_stats
         WHERE metric_key IN ('payment_total', 'payment_rate')
           AND date >= ${range.start}::date AND date <= ${range.end}::date
@@ -166,7 +166,7 @@ export async function queryTrafficSeries(range: DateRange): Promise<{
   exposure: number[];
 }> {
   const result = await db.execute<{ date: string; metricKey: string; value: number }>(
-    sql`SELECT date::text, metric_key, metric_value::numeric as value
+    sql`SELECT date::text, metric_key as "metricKey", metric_value::numeric as value
         FROM analytics_daily_stats
         WHERE metric_key IN ('pv', 'uv', 'homepage_exposure')
           AND date >= ${range.start}::date AND date <= ${range.end}::date

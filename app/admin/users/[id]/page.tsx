@@ -18,7 +18,7 @@ interface UserDetailData {
     currentPeriodEnd: string | null;
     paypalSubscriptionId: string;
   } | null;
-  conversationCount: number;
+  messageCount: number;
 }
 
 export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -112,8 +112,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
             <p className="mt-1 font-medium">{new Date(user.createdAt).toLocaleDateString('zh-CN')}</p>
           </div>
           <div>
-            <span className="text-gray-400">对话数</span>
-            <p className="mt-1 font-medium">{user.conversationCount}</p>
+            <span className="text-gray-400">消息数</span>
+            <p className="mt-1 font-medium">{user.messageCount}</p>
           </div>
         </div>
 
