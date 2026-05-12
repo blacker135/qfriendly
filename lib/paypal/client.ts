@@ -1,6 +1,9 @@
 // lib/paypal/client.ts
 // PayPal REST API 客户端
 // 封装 OAuth 令牌获取 + 订阅查询
+// 注意：token 缓存仅在 serverless 实例生命周期内有效，冷启动后重置
+
+import 'server-only';
 
 const PAYPAL_API_BASE =
   process.env.NODE_ENV === 'production'
@@ -78,6 +81,10 @@ interface PayPalSubscription {
  * @returns 订阅详情对象
  */
 export async function getSubscription(subscriptionId: string): Promise<PayPalSubscription> {
+  if (!subscriptionId || typeof subscriptionId !== 'string') {
+    throw new Error('subscriptionId is required and must be a string');
+  }
+
   const token = await getAccessToken();
 
   const res = await fetch(
@@ -107,6 +114,20 @@ export async function verifyWebhookSignature(
   headers: Record<string, string>,
   rawBody: string,
 ): Promise<boolean> {
+  const webhookId = process.env.PAYPAL_WEBHOOK_ID;
+  if (!webhookId) {
+    console.error('PAYPAL_WEBHOOK_ID not configured');
+    return false;
+  }
+
+  let webhookEvent: unknown;
+  try {
+    webhookEvent = JSON.parse(rawBody);
+  } catch {
+    console.error('PayPal webhook: invalid JSON body');
+    return false;
+  }
+
   const token = await getAccessToken();
 
   const verificationPayload = {
@@ -115,8 +136,8 @@ export async function verifyWebhookSignature(
     transmission_id: headers['paypal-transmission-id'] || '',
     transmission_sig: headers['paypal-transmission-sig'] || '',
     transmission_time: headers['paypal-transmission-time'] || '',
-    webhook_id: process.env.PAYPAL_WEBHOOK_ID || '',
-    webhook_event: JSON.parse(rawBody),
+    webhook_id: webhookId,
+    webhook_event: webhookEvent,
   };
 
   const res = await fetch(
@@ -132,7 +153,7 @@ export async function verifyWebhookSignature(
   );
 
   if (!res.ok) {
-    console.error('PayPal webhook verification failed:', res.status);
+    console.error('PayPal webhook verification API error:', res.status);
     return false;
   }
 
