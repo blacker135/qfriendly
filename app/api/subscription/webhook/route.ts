@@ -59,6 +59,19 @@ export async function POST(request: Request) {
         break;
       }
 
+      case 'BILLING.SUBSCRIPTION.RENEWED': {
+        // PayPal 自动续费成功 → 更新下一周期结束时间
+        await db
+          .update(schema.subscriptions)
+          .set({
+            status: 'active',
+            currentPeriodEnd: nextBilling ? new Date(nextBilling) : undefined,
+            updatedAt: new Date(),
+          })
+          .where(eq(schema.subscriptions.paypalSubscriptionId, subId));
+        break;
+      }
+
       case 'BILLING.SUBSCRIPTION.CANCELLED':
       case 'BILLING.SUBSCRIPTION.EXPIRED':
       case 'BILLING.SUBSCRIPTION.PAYMENT_FAILED': {
@@ -78,6 +91,14 @@ export async function POST(request: Request) {
 
       case 'BILLING.SUBSCRIPTION.UPDATED': {
         const updates: Record<string, unknown> = {};
+
+        // 方案升级/降级：同步 planId 和 variantName
+        if (planId) {
+          updates.paypalPlanId = planId;
+          const newVariant = getVariantName(planId);
+          if (newVariant) updates.variantName = newVariant;
+        }
+
         if (eventStatus) {
           const statusMap: Record<string, string> = {
             ACTIVE: 'active',
