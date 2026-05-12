@@ -19,14 +19,14 @@ interface PayPalWebhookEvent {
 }
 
 /** PayPal 状态 → DB status */
-function mapStatus(paypalStatus: string): string {
-  const statusMap: Record<string, string> = {
-    ACTIVE: 'active',
-    SUSPENDED: 'suspended',
-    CANCELLED: 'cancelled',
-    EXPIRED: 'expired',
+function mapStatus(paypalStatus: string): 'active' | 'suspended' | 'cancelled' | 'expired' {
+  const statusMap = {
+    ACTIVE: 'active' as const,
+    SUSPENDED: 'suspended' as const,
+    CANCELLED: 'cancelled' as const,
+    EXPIRED: 'expired' as const,
   };
-  return statusMap[paypalStatus] || 'cancelled';
+  return statusMap[paypalStatus as keyof typeof statusMap] || 'cancelled';
 }
 
 export async function POST(request: Request) {
