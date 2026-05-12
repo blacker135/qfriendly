@@ -7,6 +7,7 @@ import { eq, asc, and, gte, count } from 'drizzle-orm';
 import { createDeepSeekClient } from '@/lib/deepseek/client';
 import { getExpertPrompt } from '@/lib/prompts/experts';
 import type { ExpertId, Language } from '@/lib/prompts/experts';
+import { checkTrialAccess } from '@/lib/subscription/gate';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
@@ -46,45 +47,10 @@ export async function POST(request: Request) {
   const isSubscribed = subscription && subscription.status === 'active';
   const variant = subscription?.variant || null;
 
-  // 未订阅用户：事务内原子递增 trial 计数，防止并发绕过
+  // 未订阅用户：原子 trial 检查（共享门控函数）
   let trialUsed = 0;
   if (!isSubscribed) {
-    const trialResult = await db.transaction(async (tx) => {
-      const [profile] = await tx
-        .select({ trialUsed: schema.profiles.trialUsed })
-        .from(schema.profiles)
-        .where(eq(schema.profiles.userId, session.user.id))
-        .for('update');
-
-      const current = profile?.trialUsed || 0;
-
-      if (current >= 3) {
-        return { allowed: false, trialUsed: current };
-      }
-
-      if (!profile) {
-        await tx.insert(schema.profiles)
-          .values({ userId: session.user.id, trialUsed: 1 })
-          .onConflictDoNothing();
-
-        // 并发场景下另一事务可能先插入，需重新读取
-        const [reProfile] = await tx
-          .select({ trialUsed: schema.profiles.trialUsed })
-          .from(schema.profiles)
-          .where(eq(schema.profiles.userId, session.user.id))
-          .for('update');
-
-        const actualTrialUsed = reProfile?.trialUsed ?? 1;
-        return { allowed: true, trialUsed: actualTrialUsed };
-      } else {
-        await tx
-          .update(schema.profiles)
-          .set({ trialUsed: current + 1 })
-          .where(eq(schema.profiles.userId, session.user.id));
-      }
-
-      return { allowed: true, trialUsed: current + 1 };
-    });
+    const trialResult = await checkTrialAccess(session.user.id);
 
     trialUsed = trialResult.trialUsed;
 
@@ -93,7 +59,7 @@ export async function POST(request: Request) {
         error: 'Trial exhausted',
         code: 'TRIAL_EXHAUSTED',
         trial_used: trialUsed,
-        trial_limit: 3,
+        trial_limit: trialResult.trialLimit,
       }, { status: 402 });
     }
   }
