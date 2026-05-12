@@ -3,8 +3,7 @@
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { db, schema } from '@/lib/db';
-import { eq, asc, count } from 'drizzle-orm';
-import { checkTrialAccess } from '@/lib/subscription/gate';
+import { eq, asc, and, gte, count } from 'drizzle-orm';
 import { createDeepSeekClient } from '@/lib/deepseek/client';
 import { getSwitchPrompt, getWelcomeMessage, getExpertInfo } from '@/lib/prompts/experts';
 import type { ExpertId, Language } from '@/lib/prompts/experts';
@@ -47,15 +46,22 @@ export async function POST(request: Request) {
   const isSubscribed = subscription && subscription.status === 'active';
   const variant = subscription?.variant || null;
 
-  // 未订阅用户：原子 trial 检查
+  // 未订阅用户：只读 trial 状态检查（不递增，仅检查是否已耗尽）
   if (!isSubscribed) {
-    const trialResult = await checkTrialAccess(session.user.id);
-    if (!trialResult.allowed) {
+    const [profile] = await db
+      .select({ trialUsed: schema.profiles.trialUsed })
+      .from(schema.profiles)
+      .where(eq(schema.profiles.userId, session.user.id));
+
+    const trialUsed = profile?.trialUsed || 0;
+    const trialLimit = 3;
+
+    if (trialUsed >= trialLimit) {
       return Response.json({
         error: 'Trial exhausted',
         code: 'TRIAL_EXHAUSTED',
-        trial_used: trialResult.trialUsed,
-        trial_limit: trialResult.trialLimit,
+        trial_used: trialUsed,
+        trial_limit: trialLimit,
       }, { status: 402 });
     }
   }
@@ -69,6 +75,33 @@ export async function POST(request: Request) {
         code: 'EXPERT_LOCKED',
         message: 'Upgrade to Pro or Ultra to unlock all experts.',
       }, { status: 403 });
+    }
+  }
+
+  // 日消息量限额（对 Starter / Pro 用户，trial 用户跳过）
+  if (isSubscribed && (variant === 'starter' || variant === 'pro')) {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const [result] = await db
+      .select({ count: count() })
+      .from(schema.messages)
+      .innerJoin(schema.conversations, eq(schema.messages.conversationId, schema.conversations.id))
+      .where(
+        and(
+          eq(schema.conversations.userId, session.user.id),
+          eq(schema.messages.role, 'user'),
+          gte(schema.messages.createdAt, todayStart),
+        ),
+      );
+
+    const dailyLimit = variant === 'starter' ? 30 : 100;
+    if ((result?.count || 0) >= dailyLimit) {
+      return Response.json({
+        error: 'Daily message limit reached',
+        code: 'DAILY_LIMIT',
+        message: `You've reached the daily limit of ${dailyLimit} messages.`,
+      }, { status: 429 });
     }
   }
   // ---- 门控结束 ----
