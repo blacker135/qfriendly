@@ -31,12 +31,12 @@ export function MessageBubble({ role, content }: MessageBubbleProps) {
   // ---------- 空内容 → 加载动画 ----------
   if (!content || content.length === 0) {
     return (
-      <div className={`flex mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}>
+      <div className={`flex mb-3 lg:mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}>
         <div
-          className={`rounded-[18px] px-5 py-3 ${
+          className={`rounded-[18px] px-4 py-2.5 md:px-4 md:py-3 lg:px-5 lg:py-3 ${
             isUser
-              ? 'max-w-[70%] bg-[#FF7A59]/10'
-              : 'max-w-[80%] border border-gray-100 bg-white shadow-soft'
+              ? 'max-w-[85%] md:max-w-[75%] lg:max-w-[65%] bg-[#FF7A59]/10'
+              : 'max-w-[92%] md:max-w-[85%] lg:max-w-[75%] border border-gray-100 bg-white shadow-soft'
           }`}
         >
           {/* 三个跳动圆点的加载动画 */}
@@ -63,16 +63,16 @@ export function MessageBubble({ role, content }: MessageBubbleProps) {
   // ---------- 正常消息渲染 ----------
   return (
     <motion.div
-      className={`flex mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}
+      className={`flex mb-3 lg:mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       <div
-        className={`rounded-[18px] px-5 py-3 text-sm leading-relaxed ${
+        className={`rounded-[18px] px-4 py-2.5 md:px-4 md:py-3 lg:px-5 lg:py-3 text-[15px] lg:text-sm leading-relaxed ${
           isUser
-            ? 'max-w-[70%] bg-[#FF7A59]/10 text-text-primary'
-            : 'max-w-[80%] border border-gray-100 bg-white text-text-primary shadow-soft prose prose-sm prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-headings:my-2 prose-a:text-[#FF7A59]'
+            ? 'max-w-[85%] md:max-w-[75%] lg:max-w-[65%] bg-[#FF7A59]/10 text-text-primary'
+            : 'max-w-[92%] md:max-w-[85%] lg:max-w-[75%] border border-gray-100 bg-white text-text-primary shadow-soft prose prose-sm prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-headings:my-2 prose-a:text-[#FF7A59]'
         }`}
       >
         {isUser ? (
