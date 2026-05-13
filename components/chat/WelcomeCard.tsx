@@ -77,7 +77,7 @@ export function WelcomeCard({ expert, onSuggestionClick }: WelcomeCardProps) {
               onClick={() => onSuggestionClick(suggestion)}
               className="inline-flex items-center gap-2 rounded-[16px] border border-gray-200 bg-white px-4 py-2.5 text-sm text-text-primary shadow-soft transition-colors hover:border-[#FF7A59]/30 hover:bg-[#FF7A59]/5 cursor-pointer touch-manipulation min-h-[44px]"
             >
-              <svg className="h-4 w-4 flex-shrink-0 text-[#FF7A59]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg aria-hidden="true" className="h-4 w-4 flex-shrink-0 text-[#FF7A59]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
               <span className="max-w-[280px] truncate">{suggestion}</span>
