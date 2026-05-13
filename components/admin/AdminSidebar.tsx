@@ -22,8 +22,6 @@ const navGroups: NavGroup[] = [
     label: '用户体系',
     items: [
       { href: '/admin/users', label: '用户管理' },
-      { href: '/admin/members', label: '会员管理' },
-      { href: '/admin/subscriptions', label: '订阅管理' },
     ],
   },
   {
