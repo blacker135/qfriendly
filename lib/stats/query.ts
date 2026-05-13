@@ -46,7 +46,7 @@ export async function queryTotalRevenue(): Promise<number> {
     sql`SELECT COALESCE(SUM((payload->>'amount')::numeric), 0) as total
         FROM analytics_events WHERE event_type = 'payment_completed'`
   );
-  return result.rows[0]?.total ?? 0;
+  return Number(result.rows[0]?.total ?? 0);
 }
 
 // ----- 项目统计 -----
@@ -234,9 +234,10 @@ export async function queryUsers(params: UserListParams): Promise<{ users: UserR
         FROM "user" u
         LEFT JOIN subscriptions s ON u.id = s.user_id AND s.status = 'active'
         LEFT JOIN (
-          SELECT user_id, COUNT(*) as msg_count
-          FROM messages
-          GROUP BY user_id
+          SELECT c.user_id, COUNT(*) as msg_count
+          FROM messages m
+          JOIN conversations c ON m.conversation_id = c.id
+          GROUP BY c.user_id
         ) m ON m.user_id = u.id
         WHERE 1=1 ${searchFilter}
         ORDER BY u.created_at DESC
@@ -272,9 +273,10 @@ export async function queryMembers(params: MemberListParams): Promise<{ members:
         FROM subscriptions s
         JOIN "user" u ON s.user_id = u.id
         LEFT JOIN (
-          SELECT user_id, COUNT(*) as msg_count
-          FROM messages
-          GROUP BY user_id
+          SELECT c.user_id, COUNT(*) as msg_count
+          FROM messages m
+          JOIN conversations c ON m.conversation_id = c.id
+          GROUP BY c.user_id
         ) m ON m.user_id = u.id
         WHERE s.status = 'active' ${variantFilter}
         ORDER BY s.created_at DESC
