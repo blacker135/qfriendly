@@ -136,6 +136,7 @@ export function NavbarClient({ lang, user, membership, isAdmin = false }: Navbar
     } catch (err) {
       console.error('Logout failed:', err);
     } finally {
+      window.sessionStorage.removeItem('admin_redirected');
       window.location.href = `/${lang}`;
     }
   };
