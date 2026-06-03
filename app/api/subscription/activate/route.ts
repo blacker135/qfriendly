@@ -1,5 +1,9 @@
 // app/api/subscription/activate/route.ts
 // POST /api/subscription/activate — PayPal 订阅审批后验证并存储
+// regions: hkg1 (香港)
+
+// Vercel 函数部署区域：香港
+export const regions = ['hkg1'];
 
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';

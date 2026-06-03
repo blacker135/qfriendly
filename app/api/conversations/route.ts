@@ -1,4 +1,8 @@
 // /api/conversations — 对话列表 CRUD
+// regions: hkg1 (香港)
+
+// Vercel 函数部署区域：香港
+export const regions = ['hkg1'];
 
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';

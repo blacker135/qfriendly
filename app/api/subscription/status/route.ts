@@ -1,10 +1,14 @@
 // app/api/subscription/status/route.ts
 // GET /api/subscription/status — 返回当前用户订阅状态和试用信息
+// regions: hkg1 (香港)
 
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { db, schema } from '@/lib/db';
 import { eq } from 'drizzle-orm';
+
+// Vercel 函数部署区域：香港
+export const regions = ['hkg1'];
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() });
