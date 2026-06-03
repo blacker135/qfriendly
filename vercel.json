@@ -5,9 +5,5 @@
       "schedule": "0 3 * * *"
     }
   ],
-  "functions": {
-    "api/**/*": {
-      "regions": ["hkg1"]
-    }
-  }
+  "regions": ["hkg1"]
 }
