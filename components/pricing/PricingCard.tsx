@@ -29,8 +29,6 @@ export function PricingCard({ plan, isYearly, isTestPlan, isLoggedIn, lang }: Pr
 
   // 折算月费（年费 ÷ 12）
   const monthlyEquivalent = (plan.yearlyPrice / 12).toFixed(2);
-  // 年付比月付节省的百分比
-  const savePercent = Math.round((1 - plan.yearlyPrice / (plan.monthlyPrice * 12)) * 100);
 
   const displayPrice = isYearly
     ? monthlyEquivalent
@@ -66,7 +64,7 @@ export function PricingCard({ plan, isYearly, isTestPlan, isLoggedIn, lang }: Pr
             ${plan.monthlyPrice}/{tp('month')}
           </span>
           <span className="text-xs text-[#FF7A59] font-medium">
-            {tp('savePerYear', { percent: savePercent })}
+            {tp('save')}
           </span>
         </div>
       )}

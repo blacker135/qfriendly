@@ -292,7 +292,7 @@
       "effectDeep": "Deep, focused guidance"
     },
     "monthlyEquivalent": "${price}/mo equivalent",
-    "savePerYear": "Save {percent}%",
+    "save": "Save",
     "testPlanName": "Test Plan",
     "testPlanCTA": "Test Pay ($0.10)"
   },

@@ -292,7 +292,7 @@
       "effectDeep": "深度专注指导"
     },
     "monthlyEquivalent": "折合 ${price}/月",
-    "savePerYear": "省 {percent}%",
+    "save": "省",
     "testPlanName": "测试方案",
     "testPlanCTA": "测试支付 ($0.10)"
   },
