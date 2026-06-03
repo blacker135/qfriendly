@@ -1,12 +1,12 @@
 {
   "meta": {
-    "title": "Lunara — AI Relationship Guidance",
+    "title": "HeartLab — AI Relationship Guidance",
     "description": "Focused on building, maintaining, growing, and saving love relationships. Four AI experts, four perspectives, guiding you through every stage of love.",
-    "siteName": "Lunara"
+    "siteName": "HeartLab"
   },
 
   "nav": {
-    "brand": "Lunara",
+    "brand": "HeartLab",
     "home": "Home",
     "chat": "Chat",
     "language": "Language",
@@ -87,7 +87,7 @@
 
   "cases": {
     "title": "Does this sound like you?",
-    "subtitle": "These are real emotional patterns people bring to Lunara every day. You are not alone in this.",
+    "subtitle": "These are real emotional patterns people bring to HeartLab every day. You are not alone in this.",
     "items": [
       {
         "question": "Why does he suddenly become distant?",
@@ -131,7 +131,7 @@
         "context": "Navigating a complicated relationship"
       },
       {
-        "quote": "I was embarrassed to talk to friends about my relationship anxiety. Lunara gave me perspective without judgment.",
+        "quote": "I was embarrassed to talk to friends about my relationship anxiety. HeartLab gave me perspective without judgment.",
         "author": "Marcus, 28",
         "context": "Overcoming attachment anxiety"
       },
@@ -173,8 +173,8 @@
     "title": "Frequently Asked Questions",
     "items": [
       {
-        "question": "Is Lunara a real therapist?",
-        "answer": "Lunara is an AI relationship guidance platform, not a licensed therapist. Our experts are AI personas trained on relationship psychology frameworks. They provide compassionate guidance and perspective — not clinical diagnosis or treatment."
+        "question": "Is HeartLab a real therapist?",
+        "answer": "HeartLab is an AI relationship guidance platform, not a licensed therapist. Our experts are AI personas trained on relationship psychology frameworks. They provide compassionate guidance and perspective — not clinical diagnosis or treatment."
       },
       {
         "question": "Is my conversation really private?",
@@ -197,7 +197,7 @@
     "terms": "Terms",
     "refund": "Refund",
     "contact": "Contact",
-    "copyright": "© 2025 Lunara. All rights reserved."
+    "copyright": "© 2025 HeartLab. All rights reserved."
   },
 
   "chat": {
@@ -318,11 +318,11 @@
       "sections": [
         {
           "heading": "1. Acceptance of Terms",
-          "body": "By accessing or using Lunara (\"the Service\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service."
+          "body": "By accessing or using HeartLab (\"the Service\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service."
         },
         {
           "heading": "2. Description of Service",
-          "body": "Lunara is an AI-powered relationship guidance platform that provides conversational support through AI personas. The Service is not a substitute for professional therapy, counseling, or medical advice. Our AI experts provide general guidance and emotional support based on relationship psychology frameworks, not clinical diagnosis or treatment."
+          "body": "HeartLab is an AI-powered relationship guidance platform that provides conversational support through AI personas. The Service is not a substitute for professional therapy, counseling, or medical advice. Our AI experts provide general guidance and emotional support based on relationship psychology frameworks, not clinical diagnosis or treatment."
         },
         {
           "heading": "3. User Responsibilities",
@@ -334,7 +334,7 @@
         },
         {
           "heading": "5. Intellectual Property",
-          "body": "The Service, including its design, code, content, branding, and AI personas, is owned by Lunara and protected by intellectual property laws. You may not copy, modify, distribute, or create derivative works based on the Service without our prior written consent."
+          "body": "The Service, including its design, code, content, branding, and AI personas, is owned by HeartLab and protected by intellectual property laws. You may not copy, modify, distribute, or create derivative works based on the Service without our prior written consent."
         },
         {
           "heading": "6. Disclaimer of Warranties",
@@ -342,7 +342,7 @@
         },
         {
           "heading": "7. Limitation of Liability",
-          "body": "To the maximum extent permitted by law, Lunara shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service. Our total liability shall not exceed the amount you paid us in the twelve months preceding the claim."
+          "body": "To the maximum extent permitted by law, HeartLab shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service. Our total liability shall not exceed the amount you paid us in the twelve months preceding the claim."
         },
         {
           "heading": "8. Termination",
@@ -354,7 +354,7 @@
         },
         {
           "heading": "10. Governing Law",
-          "body": "These terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Lunara operates. Any disputes arising from these terms shall be resolved through binding arbitration where permitted by law."
+          "body": "These terms shall be governed by and construed in accordance with the laws of the jurisdiction in which HeartLab operates. Any disputes arising from these terms shall be resolved through binding arbitration where permitted by law."
         }
       ]
     },
@@ -422,7 +422,7 @@
         },
         {
           "heading": "6. Contact",
-          "body": "For refund inquiries or any billing questions, please contact us at support@lunara.ai. We aim to respond to all inquiries within 24 hours."
+          "body": "For refund inquiries or any billing questions, please contact us at support@heartlab.ai. We aim to respond to all inquiries within 24 hours."
         }
       ]
     }

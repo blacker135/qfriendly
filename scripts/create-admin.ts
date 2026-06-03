@@ -6,7 +6,7 @@ import { db, schema } from '../lib/db';
 import { eq } from 'drizzle-orm';
 
 async function createAdmin() {
-  const email = 'blacker_admin@lunara.admin';
+  const email = 'blacker_admin@heartlab.ai';
 
   const [existing] = await db
     .select()
@@ -16,7 +16,7 @@ async function createAdmin() {
   const userId = existing?.id;
 
   if (!userId) {
-    console.error('管理员用户不存在。请先在应用中注册 blacker_admin@lunara.admin 账号。');
+    console.error('管理员用户不存在。请先在应用中注册 blacker_admin@heartlab.ai 账号。');
     process.exit(1);
   }
 

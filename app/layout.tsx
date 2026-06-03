@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Lunara — AI Emotional Guidance',
+  title: 'HeartLab — AI Emotional Guidance',
   description: 'AI emotional guidance for modern relationships. Talk with experts who understand.',
 };
 
