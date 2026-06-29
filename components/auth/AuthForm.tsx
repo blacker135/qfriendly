@@ -64,7 +64,7 @@ export function AuthForm() {
           {isSignUp ? 'Create your account' : 'Welcome back'}
         </h1>
         <p className="mt-2 text-center text-sm text-text-secondary">
-          {isSignUp ? 'Start your journey with HeartLab' : 'Sign in to continue your conversations'}
+          {isSignUp ? 'Start your journey with QFriendly' : 'Sign in to continue your conversations'}
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">

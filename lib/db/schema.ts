@@ -1,6 +1,6 @@
 // lib/db/schema.ts
 // Drizzle ORM 数据库 Schema 定义
-// 包含 Better Auth 认证表 + HeartLab 业务表
+// 包含 Better Auth 认证表 + QFriendly 业务表
 
 import {
   pgTable,
@@ -73,7 +73,7 @@ export const verification = pgTable('verification', {
 });
 
 // ============================================================
-// HeartLab 订阅表
+// QFriendly 订阅表
 // ============================================================
 
 export const subscriptionStatusEnum = pgEnum('subscription_status', [
@@ -99,7 +99,7 @@ export const subscriptions = pgTable('subscriptions', {
 });
 
 // ============================================================
-// HeartLab 业务表
+// QFriendly 业务表
 // ============================================================
 
 export const expertEnum = pgEnum('expert', ['evan', 'liam', 'noah', 'adrian']);

@@ -12,7 +12,7 @@ import { eq } from 'drizzle-orm';
 // ============================================================
 // 管理员配置
 // ============================================================
-const ADMIN_EMAIL = 'admin_blacker@heartlab.quan';
+const ADMIN_EMAIL = 'admin_blacker@qfriendly.quan';
 const ADMIN_PASSWORD = 'blacker_admin123';
 const ADMIN_NAME = 'Admin Blacker';
 
@@ -70,7 +70,7 @@ async function hashPassword(password: string): Promise<string> {
 // 主流程
 // ============================================================
 async function createAdmin() {
-  console.log('=== HeartLab 管理员账号创建工具 ===\n');
+  console.log('=== QFriendly 管理员账号创建工具 ===\n');
 
   // 1. 检查用户是否已存在
   const [existingUser] = await db
