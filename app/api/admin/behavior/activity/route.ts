@@ -7,11 +7,11 @@ import {
   queryDAU,
   queryWAU,
   queryMAU,
-  queryDailySessions,
+  querySessionCounts,
   queryAvgSessionDuration,
   queryAvgSessionsPerUser,
 } from '@/lib/stats/behavior';
-import type { DateRange } from '@/lib/stats/behavior';
+import type { DateRange } from '@/lib/stats/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
       queryDAU({ start: range.end, end: range.end }),
       queryWAU(range),
       queryMAU(range),
-      queryDailySessions(range),
+      querySessionCounts(range),
       queryAvgSessionDuration(range),
       queryAvgSessionsPerUser(range),
     ]);

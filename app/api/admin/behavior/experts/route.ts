@@ -10,7 +10,7 @@ import {
   queryExpertSwitchPaths,
   queryExpertUserReach,
 } from '@/lib/stats/behavior';
-import type { DateRange } from '@/lib/stats/behavior';
+import type { DateRange } from '@/lib/stats/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {

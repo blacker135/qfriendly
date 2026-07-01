@@ -6,7 +6,7 @@ import {
   queryMRR, queryARR, queryMRRWaterfall, queryMRRTrend,
   queryPlanMRRShare, queryPayingUsers, queryARPPU, queryLTV,
 } from '@/lib/stats/revenue';
-import type { DateRange } from '@/lib/stats/revenue';
+import type { DateRange } from '@/lib/stats/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {

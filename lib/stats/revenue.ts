@@ -118,11 +118,8 @@ export function trackSubscriptionEvent(params: {
 // 为收入分析 API 提供 MRR/ARR/转化/流失/LTV 等指标查询
 // ============================================================
 
-/** 日期范围查询参数（与 lib/stats/query.ts 中的 DateRange 保持一致） */
-export interface DateRange {
-  start: string; // YYYY-MM-DD
-  end: string;   // YYYY-MM-DD
-}
+/** 日期范围查询参数 */
+import type { DateRange } from './types';
 
 // ----- 核心收入指标 -----
 

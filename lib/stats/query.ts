@@ -4,12 +4,7 @@
 
 import { sql } from 'drizzle-orm';
 import { db } from '@/lib/db';
-
-/** 日期范围查询参数 */
-export interface DateRange {
-  start: string; // YYYY-MM-DD
-  end: string;   // YYYY-MM-DD
-}
+import type { DateRange } from './types';
 
 /** 粒度 */
 export type Granularity = 'day' | 'month' | 'year';
@@ -157,45 +152,6 @@ export async function queryPaymentSeries(range: DateRange): Promise<{
 }
 
 // ----- 流量统计 -----
-
-/** 按日期范围获取 PV/UV/曝光 序列 */
-export async function queryTrafficSeries(range: DateRange): Promise<{
-  dates: string[];
-  pv: number[];
-  uv: number[];
-  exposure: number[];
-}> {
-  const result = await db.execute<{ date: string; metricKey: string; value: number }>(
-    sql`SELECT date::text, metric_key as "metricKey", metric_value::numeric as value
-        FROM analytics_daily_stats
-        WHERE metric_key IN ('pv', 'uv', 'homepage_exposure')
-          AND date >= ${range.start}::date AND date <= ${range.end}::date
-        ORDER BY date, metric_key`
-  );
-
-  const dates: string[] = [];
-  const pv: number[] = [];
-  const uv: number[] = [];
-  const exposure: number[] = [];
-
-  const byDate = new Map<string, { pv?: number; uv?: number; exposure?: number }>();
-  for (const r of result.rows) {
-    if (!byDate.has(r.date)) byDate.set(r.date, {});
-    const entry = byDate.get(r.date)!;
-    if (r.metricKey === 'pv') entry.pv = Number(r.value);
-    if (r.metricKey === 'uv') entry.uv = Number(r.value);
-    if (r.metricKey === 'homepage_exposure') entry.exposure = Number(r.value);
-  }
-
-  for (const [date, vals] of byDate) {
-    dates.push(date);
-    pv.push(vals.pv ?? 0);
-    uv.push(vals.uv ?? 0);
-    exposure.push(vals.exposure ?? 0);
-  }
-
-  return { dates, pv, uv, exposure };
-}
 
 // ----- 用户管理 -----
 

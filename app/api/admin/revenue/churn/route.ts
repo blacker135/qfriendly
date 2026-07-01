@@ -7,7 +7,7 @@ import {
   queryNewPayingUsers, queryChurnRateByPlan, queryChurnByDuration,
   queryUpgradeDowngrade, queryUpgradeRate,
 } from '@/lib/stats/revenue';
-import type { DateRange } from '@/lib/stats/revenue';
+import type { DateRange } from '@/lib/stats/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {

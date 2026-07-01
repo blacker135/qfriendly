@@ -10,6 +10,7 @@ import SegmentsTab from '@/components/admin/behavior/SegmentsTab';
 import DepthTab from '@/components/admin/behavior/DepthTab';
 import ExpertsTab from '@/components/admin/behavior/ExpertsTab';
 import DateRangePicker from '@/components/admin/shared/DateRangePicker';
+import { getDefaultDateRange, type Preset } from '@/components/admin/shared/dateUtils';
 import ExportButton from '@/components/admin/shared/ExportButton';
 
 /** Tab 配置 */
@@ -21,18 +22,6 @@ const TABS = [
 ] as const;
 
 type TabKey = (typeof TABS)[number]['key'];
-type Preset = 'day' | 'month' | 'year' | 'custom';
-
-/** 日期范围默认值 — 本月 */
-function getDefaultDateRange(): { start: string; end: string; preset: Preset } {
-  const today = new Date();
-  const fmt = (d: Date) => d.toISOString().slice(0, 10);
-  return {
-    start: fmt(new Date(today.getFullYear(), today.getMonth(), 1)),
-    end: fmt(today),
-    preset: 'month' as Preset,
-  };
-}
 
 export default function BehaviorPage() {
   const [activeTab, setActiveTab] = useState<TabKey>('activity');

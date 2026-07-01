@@ -9,20 +9,7 @@ import {
   ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 import DateRangePicker from '@/components/admin/shared/DateRangePicker';
-
-/** 日期范围预设类型 */
-type Preset = 'day' | 'month' | 'year' | 'custom';
-
-/** 日期范围默认值 — 本月 */
-function getDefaultDateRange(): { start: string; end: string; preset: Preset } {
-  const today = new Date();
-  const fmt = (d: Date) => d.toISOString().slice(0, 10);
-  return {
-    start: fmt(new Date(today.getFullYear(), today.getMonth(), 1)),
-    end: fmt(today),
-    preset: 'month' as Preset,
-  };
-}
+import { getDefaultDateRange, type Preset } from '@/components/admin/shared/dateUtils';
 
 /** 流量详情响应数据类型 */
 interface TrafficDetail {
@@ -254,11 +241,10 @@ export default function TrafficPage() {
       {/* ---- PV/UV 趋势图 ---- */}
       <ChartCard title="PV / UV 趋势">
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data.pvTrend.map((d, i) => ({
-            date: d.date.slice(5), // MM-DD 格式
-            PV: d.value,
-            UV: data.uvTrend[i]?.value ?? 0,
-          }))}>
+          <LineChart data={(data.pvTrend || []).map((pvItem) => {
+            const uvMatch = (data.uvTrend || []).find((uvItem) => uvItem.date === pvItem.date);
+            return { date: pvItem.date.slice(5), PV: pvItem.value, UV: uvMatch?.value ?? 0 };
+          })}>
             <CartesianGrid strokeDasharray="3 3" stroke={COLORS.grid} />
             <XAxis dataKey="date" tick={{ fill: COLORS.text, fontSize: 12 }} />
             <YAxis tick={{ fill: COLORS.text, fontSize: 12 }} />

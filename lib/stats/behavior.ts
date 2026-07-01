@@ -7,11 +7,7 @@
 import { sql } from 'drizzle-orm';
 import { db } from '@/lib/db';
 
-/** 日期范围查询参数（与 lib/stats/revenue.ts 中的 DateRange 接口兼容） */
-export interface DateRange {
-  start: string; // YYYY-MM-DD
-  end: string;   // YYYY-MM-DD
-}
+import type { DateRange } from './types';
 
 // ============================================================
 // 1. 活跃度指标 (5 个查询)
@@ -115,16 +111,6 @@ export async function queryAvgSessionDuration(range: DateRange): Promise<number>
   );
   // 转换为分钟
   return Number(result.rows[0]?.avg ?? 0) / 60;
-}
-
-/**
- * 查询每日会话数趋势（用于图表展示）
- * 按天统计会话总数
- * @param range - 日期范围
- * @returns 日期-会话数对数组
- */
-export async function queryDailySessions(range: DateRange): Promise<{ date: string; count: number }[]> {
-  return querySessionCounts(range);
 }
 
 /**
@@ -543,7 +529,7 @@ export interface ExpertUsage {
   color: string;        // 图表配色
 }
 
-/** 专家中文名映射 */
+/** 专家显示名映射 */
 const EXPERT_LABELS: Record<string, string> = {
   evan: 'Evan',
   liam: 'Liam',
