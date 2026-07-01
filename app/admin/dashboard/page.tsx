@@ -1,19 +1,15 @@
 // app/admin/dashboard/page.tsx
-// 仪表盘页面 — 服务端获取数据，客户端渲染图表
+// 综合仪表盘页面 — 服务端鉴权，客户端获取数据并渲染
 
 import { getAdminUserId } from '@/lib/admin/guard';
-import {
-  queryTotalUsers,
-  queryActiveSubscriptions,
-  queryTodayMessages,
-  queryTotalRevenue,
-  queryExpertDistribution,
-  queryDAUSeries,
-  queryMessageSeries,
-} from '@/lib/stats';
 import { redirect } from 'next/navigation';
 import DashboardClient from './DashboardClient';
 
+/**
+ * 仪表盘页面（Server Component）
+ * - 服务端校验管理员权限
+ * - 渲染 DashboardClient（客户端组件，自行从 API 获取数据）
+ */
 export default async function DashboardPage() {
   const auth = await getAdminUserId();
   // getAdminUserId 返回 userId 字符串或 NextResponse
@@ -22,36 +18,6 @@ export default async function DashboardPage() {
     redirect('/');
   }
 
-  const today = new Date().toISOString().slice(0, 10);
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
-
-  const [
-    totalUsers,
-    activeSubs,
-    todayMessages,
-    totalRevenue,
-    expertDist,
-    dauSeries,
-    messageSeries,
-  ] = await Promise.all([
-    queryTotalUsers(),
-    queryActiveSubscriptions(),
-    queryTodayMessages(),
-    queryTotalRevenue(),
-    queryExpertDistribution(),
-    queryDAUSeries({ start: thirtyDaysAgo, end: today }),
-    queryMessageSeries({ start: thirtyDaysAgo, end: today }),
-  ]);
-
-  return (
-    <DashboardClient
-      totalUsers={totalUsers}
-      activeSubscriptions={activeSubs}
-      todayMessages={todayMessages}
-      totalRevenue={totalRevenue}
-      expertDistribution={expertDist.map((e: { expert: string; count: number }) => ({ name: e.expert, value: e.count }))}
-      dauSeries={dauSeries}
-      messageSeries={messageSeries}
-    />
-  );
+  // 数据获取完全交给客户端组件（/api/admin/dashboard/overview）
+  return <DashboardClient />;
 }
