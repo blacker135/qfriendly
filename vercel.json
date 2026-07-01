@@ -7,10 +7,6 @@
     {
       "path": "/api/cron/daily-stats",
       "schedule": "5 0 * * *"
-    },
-    {
-      "path": "/api/cron/session-cleanup",
-      "schedule": "*/30 * * * *"
     }
   ]
 }
