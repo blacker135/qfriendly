@@ -257,7 +257,7 @@ export const sessions = pgTable('sessions', {
   durationSeconds: integer('duration_seconds'),
   deviceType: text('device_type'),
   country: text('country'),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 }, (table) => ({
   userStartedIdx: index('idx_sessions_user').on(table.userId, table.startedAt),
   anonymousIdx: index('idx_sessions_anonymous').on(table.anonymousId),

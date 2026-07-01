@@ -71,6 +71,13 @@
       "when": 1782897849910,
       "tag": "0009_woozy_dreadnoughts",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1782898036215,
+      "tag": "0010_white_stryfe",
+      "breakpoints": true
     }
   ]
 }
