@@ -5,3 +5,4 @@ export * from './schema';
 export * from './collector';
 export * from './processor';
 export * from './query';
+export * from './revenue';
