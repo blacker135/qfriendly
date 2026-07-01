@@ -7,14 +7,6 @@ import { sql } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
-/**
- * DATE 辅助：计算日期字符串
- */
-const today = new Date().toISOString().slice(0, 10);
-const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
-const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
-
 // ─── Sparkline 数据类型 ───
 interface SparklinePoint {
   date: string;
@@ -30,6 +22,12 @@ interface ExpertItem {
 export async function GET() {
   const auth = await getAdminUserId();
   if (auth instanceof NextResponse) return auth;
+
+  // 每次请求计算日期字符串（避免 Vercel Serverless 实例复用时日期过期）
+  const today = new Date().toISOString().slice(0, 10);
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
 
   try {
     // ============================================================

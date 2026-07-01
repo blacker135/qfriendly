@@ -3,6 +3,7 @@
 // 模块概览卡片 — 展示各业务模块的关键指标和迷你趋势图，支持 7天/30天 切换
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import Sparkline from './Sparkline';
 import type { ReactNode } from 'react';
 
@@ -74,7 +75,10 @@ export default function ModuleCard({
   chartSlot,
 }: ModuleCardProps) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
       className="rounded-xl p-5 flex flex-col"
       style={{ backgroundColor: '#2D2D44' }}
     >
@@ -168,6 +172,6 @@ export default function ModuleCard({
       >
         查看详情 →
       </Link>
-    </div>
+    </motion.div>
   );
 }

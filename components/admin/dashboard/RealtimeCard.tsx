@@ -2,6 +2,7 @@
 // components/admin/dashboard/RealtimeCard.tsx
 // 实时指标卡片 — 展示今日核心指标及与昨日对比，含迷你趋势图
 
+import { motion } from 'framer-motion';
 import Sparkline from './Sparkline';
 
 /** 实时指标卡片 props */
@@ -39,14 +40,17 @@ export default function RealtimeCard({
   indicator,
   prefix,
 }: RealtimeCardProps) {
-  // 判断涨跌方向
-  const isUp = change !== undefined && change >= 0;
-  const isDown = change !== undefined && change < 0;
-  const changeColor = isUp ? '#22C55E' : '#EF4444';
-  const changeIcon = isUp ? '↑' : '↓'; // ↑ / ↓
+  // 判断涨跌方向（三态：涨↑ / 平→ / 跌↓）
+  const isUp = (change ?? 0) > 0;
+  const isZero = (change ?? 0) === 0;
+  const changeColor = isZero ? '#9CA3AF' : isUp ? '#22C55E' : '#EF4444';
+  const changeIcon = isZero ? '→' : isUp ? '↑' : '↓';
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
       className="rounded-xl p-5 flex flex-col justify-between"
       style={{ backgroundColor: '#2D2D44' }}
     >
@@ -93,6 +97,6 @@ export default function RealtimeCard({
           <Sparkline data={sparklineData} color={sparklineColor} height={28} />
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
