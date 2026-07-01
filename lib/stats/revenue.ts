@@ -149,7 +149,7 @@ export async function queryARR(): Promise<number> {
   const result = await db.execute<{ total: number }>(
     sql`SELECT COALESCE(SUM(
           CASE WHEN s.status = 'active' AND sub.billing_period = 'yearly'
-            THEN (sub.amount::numeric / 12) * 12
+            THEN sub.amount::numeric  -- ARR 仅汇总年付订阅年化金额，月付不计入
             ELSE 0 END
         ), 0)::numeric as total
         FROM subscriptions s
@@ -566,13 +566,13 @@ export async function queryChurnByDuration(): Promise<{
               SELECT 1 FROM subscriptions s
               WHERE s.user_id = fs.user_id AND s.status = 'active'
             )
-            AND fs.first_date <= (CURRENT_DATE - INTERVAL '${m} months')
+            AND fs.first_date <= (CURRENT_DATE - INTERVAL '1 month' * ${m})
           )
           SELECT CASE WHEN (SELECT COUNT(*) FROM first_sub
-            WHERE first_date <= (CURRENT_DATE - INTERVAL '${m} months')) > 0
+            WHERE first_date <= (CURRENT_DATE - INTERVAL '1 month' * ${m})) > 0
             THEN (SELECT COUNT(*)::numeric FROM still_active)
               / (SELECT COUNT(*)::numeric FROM first_sub
-                WHERE first_date <= (CURRENT_DATE - INTERVAL '${m} months')) * 100
+                WHERE first_date <= (CURRENT_DATE - INTERVAL '1 month' * ${m})) * 100
             ELSE 0 END as rate`
     );
     results.push({ months: m, retentionRate: Number(result.rows[0]?.rate ?? 0) });
