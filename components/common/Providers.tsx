@@ -7,7 +7,7 @@
 
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
 
 interface ProvidersProps {
@@ -16,8 +16,18 @@ interface ProvidersProps {
 
 /**
  * Providers — 客户端包装器
- * 用 ErrorBoundary 包裹所有子组件以捕获渲染错误
+ * - 用 ErrorBoundary 包裹所有子组件以捕获渲染错误
+ * - 初始化匿名访客标识（qf_anonymous_id），用于游客→注册转化追踪
  */
 export function Providers({ children }: ProvidersProps) {
+  // 生成匿名访客标识（首次访问时设置，有效期 90 天）
+  useEffect(() => {
+    const ANON_KEY = 'qf_anonymous_id';
+    if (!document.cookie.includes(`${ANON_KEY}=`)) {
+      const id = crypto.randomUUID();
+      document.cookie = `${ANON_KEY}=${id}; path=/; max-age=${90 * 86400}; SameSite=Lax`;
+    }
+  }, []);
+
   return <ErrorBoundary>{children}</ErrorBoundary>;
 }

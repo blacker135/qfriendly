@@ -12,7 +12,8 @@ export type EventType =
   | 'auth_login'
   | 'auth_register'
   | 'subscription_change'
-  | 'payment_completed';
+  | 'payment_completed'
+  | 'heartbeat'; // 新增：心跳事件（为 B.3 做准备）
 
 /** 事件记录参数 */
 interface TrackEventParams {
@@ -39,12 +40,18 @@ export function trackEvent(params: TrackEventParams): void {
     });
 }
 
-/** 页面访问快捷方法 */
+/** 页面访问快捷方法（自动携带 anonymous_id） */
 export function trackPageView(path: string, userId?: string, referrer?: string): void {
+  // 从浏览器 cookie 中读取匿名访客标识（仅客户端可用）
+  let anonymousId = '';
+  if (typeof document !== 'undefined') {
+    const match = document.cookie.match(/(?:^|;\s*)qf_anonymous_id=([^;]*)/);
+    anonymousId = match ? match[1] : '';
+  }
   trackEvent({
     eventType: 'page_view',
     userId,
-    payload: { path, referrer: referrer ?? '' },
+    payload: { path, referrer: referrer ?? '', anonymous_id: anonymousId },
   });
 }
 
