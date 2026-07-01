@@ -9,3 +9,4 @@ export * from './query';
 // 显式从 query.ts 重导出以消除 barrel 歧义
 export type { DateRange } from './query';
 export * from './revenue';
+export * from './behavior';
