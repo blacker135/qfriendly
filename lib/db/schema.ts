@@ -216,7 +216,7 @@ export const subscriptionEvents = pgTable('subscription_events', {
   amount: numeric('amount', { precision: 10, scale: 2 }),
   paypalSubscriptionId: text('paypal_subscription_id').notNull(),
   previousPlan: text('previous_plan'),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 }, (table) => ({
   userCreatedIdx: index('idx_sub_events_user').on(table.userId, table.createdAt),
   typeCreatedIdx: index('idx_sub_events_type').on(table.eventType, table.createdAt),
@@ -235,7 +235,7 @@ export const mrrSnapshots = pgTable('mrr_snapshots', {
   subscriberCount: integer('subscriber_count').notNull().default(0),
   newCount: integer('new_count').default(0),
   churnCount: integer('churn_count').default(0),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 }, (table) => ({
   datePlanUnique: uniqueIndex('idx_mrr_date_plan').on(table.date, table.plan),
 }));
