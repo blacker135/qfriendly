@@ -2,6 +2,7 @@
 // Drizzle ORM 数据库 Schema 定义
 // 包含 Better Auth 认证表 + QFriendly 业务表
 
+import { sql } from 'drizzle-orm';
 import {
   pgTable,
   text,
@@ -240,3 +241,39 @@ export const mrrSnapshots = pgTable('mrr_snapshots', {
 }, (table) => ({
   datePlanUnique: uniqueIndex('idx_mrr_date_plan').on(table.date, table.plan),
 }));
+
+// ============================================================
+// 用户会话追踪表
+// 记录用户登录/匿名会话的心跳、时长、设备与地域信息
+// ============================================================
+
+export const sessions = pgTable('sessions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: text('user_id').references(() => user.id, { onDelete: 'cascade' }),
+  anonymousId: text('anonymous_id'),
+  startedAt: timestamp('started_at').defaultNow().notNull(),
+  lastHeartbeatAt: timestamp('last_heartbeat_at').defaultNow().notNull(),
+  endedAt: timestamp('ended_at'),
+  durationSeconds: integer('duration_seconds'),
+  deviceType: text('device_type'),
+  country: text('country'),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  userStartedIdx: index('idx_sessions_user').on(table.userId, table.startedAt),
+  anonymousIdx: index('idx_sessions_anonymous').on(table.anonymousId),
+  heartbeatIdx: index('idx_sessions_heartbeat').on(table.lastHeartbeatAt)
+    .where(sql`ended_at IS NULL`),
+}));
+
+// ============================================================
+// 统计设置表
+// JSON key-value 存储可配置的统计参数项
+// ============================================================
+
+export const analyticsSettings = pgTable('analytics_settings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  key: text('key').notNull().unique(),
+  value: text('value').notNull(),
+  description: text('description'),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
