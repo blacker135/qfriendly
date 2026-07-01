@@ -7,7 +7,6 @@ import {
   queryDAU,
   queryWAU,
   queryMAU,
-  queryDAUMAURatio,
   queryDailySessions,
   queryAvgSessionDuration,
   queryAvgSessionsPerUser,
@@ -32,7 +31,6 @@ export async function GET(req: NextRequest) {
       dau,
       wau,
       mau,
-      dauMauRatio,
       dailySessions,
       avgSessionDuration,
       avgSessionsPerUser,
@@ -40,11 +38,13 @@ export async function GET(req: NextRequest) {
       queryDAU({ start: range.end, end: range.end }),
       queryWAU(range),
       queryMAU(range),
-      queryDAUMAURatio(range),
       queryDailySessions(range),
       queryAvgSessionDuration(range),
       queryAvgSessionsPerUser(range),
     ]);
+
+    // 直接从已获取的 dau/mau 计算比值，避免重复 DB 查询
+    const dauMauRatio = mau > 0 ? (dau / mau) * 100 : 0;
 
     return NextResponse.json({
       dau,

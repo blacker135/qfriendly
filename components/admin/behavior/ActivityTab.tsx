@@ -9,6 +9,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar,
 } from 'recharts';
+import KpiCard from '@/components/admin/shared/KpiCard';
 
 /** 日期范围参数（与父页面 DateRangePicker 一致） */
 interface DateRangeParam {
@@ -129,18 +130,3 @@ export default function ActivityTab({ dateRange }: ActivityTabProps) {
   );
 }
 
-/** 单个 KPI 指标卡片 */
-function KpiCard({ title, value, subtitle, color }: {
-  title: string; value: string; subtitle: string; color: string;
-}) {
-  return (
-    <div className="bg-[#2D2D44] rounded-xl border border-gray-700 p-5 hover:border-gray-600 transition-colors">
-      <p className="text-xs text-gray-400">{title}</p>
-      <p className="mt-1.5 text-2xl font-bold text-gray-200">{value}</p>
-      <div className="flex items-center gap-1.5 mt-1">
-        <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-        <p className="text-xs text-gray-500">{subtitle}</p>
-      </div>
-    </div>
-  );
-}

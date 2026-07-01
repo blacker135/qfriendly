@@ -129,9 +129,9 @@ export async function queryDailySessions(range: DateRange): Promise<{ date: stri
 
 /**
  * 查询人均日会话数
- * 计算公式：当天会话总数 / 当天活跃用户数
+ * 计算公式：范围总会话数 / 去重用户数 / 范围天数
  * @param range - 日期范围
- * @returns 人均会话数
+ * @returns 人均日会话数
  */
 export async function queryAvgSessionsPerUser(range: DateRange): Promise<number> {
   const sessionResult = await db.execute<{ count: number }>(
@@ -149,7 +149,11 @@ export async function queryAvgSessionsPerUser(range: DateRange): Promise<number>
   );
   const sessions = sessionResult.rows[0]?.count ?? 0;
   const users = userResult.rows[0]?.count ?? 0;
-  return users > 0 ? sessions / users : 0;
+  // 计算范围内的天数
+  const startDate = new Date(range.start);
+  const endDate = new Date(range.end);
+  const days = Math.max(1, Math.ceil((endDate.getTime() - startDate.getTime()) / 86400000) + 1);
+  return users > 0 ? sessions / users / days : 0;
 }
 
 // ============================================================
@@ -213,12 +217,13 @@ export interface SegmentCount {
  * 从 analytics_settings 读取阈值，计算 5 层人数：
  * 高活用户（≥20天）、中活用户（7-19天）、低活用户（1-6天）、
  * 流失风险（未活跃但小于流失阈值天数）、已流失（超过流失阈值天数）
+ * @param range - 日期范围，统计该范围内用户的活跃天数
  * @returns 各层用户统计数组
  */
-export async function queryActivitySegments(): Promise<SegmentCount[]> {
+export async function queryActivitySegments(range: DateRange): Promise<SegmentCount[]> {
   const thresholds = await getSegmentThresholds();
 
-  // 统计过去 30 天每个用户活跃天数
+  // 统计指定日期范围内每个用户活跃天数
   // 同时检查最后活跃日期判定流失风险/已流失
   const result = await db.execute<{
     segment: string; count: number;
@@ -230,7 +235,8 @@ export async function queryActivitySegments(): Promise<SegmentCount[]> {
             MAX(started_at) as last_active
           FROM sessions
           WHERE user_id IS NOT NULL
-            AND started_at >= NOW() - INTERVAL '30 days'
+            AND started_at::date >= ${range.start}::date
+            AND started_at::date <= ${range.end}::date
           GROUP BY user_id
         ),
         all_users AS (
@@ -283,10 +289,11 @@ export interface SegmentTrendPoint {
 
 /**
  * 查询每周各层占比趋势
- * 按周统计过去 12 周各活跃度分层的用户数占比
+ * 按周统计指定日期范围内各活跃度分层的用户数占比
+ * @param range - 日期范围
  * @returns 每周各层占比数组
  */
-export async function querySegmentTrend(): Promise<SegmentTrendPoint[]> {
+export async function querySegmentTrend(range: DateRange): Promise<SegmentTrendPoint[]> {
   const thresholds = await getSegmentThresholds();
 
   const result = await db.execute<{
@@ -301,7 +308,8 @@ export async function querySegmentTrend(): Promise<SegmentTrendPoint[]> {
             COUNT(DISTINCT started_at::date)::int as active_days
           FROM sessions
           WHERE user_id IS NOT NULL
-            AND started_at >= NOW() - INTERVAL '12 weeks'
+            AND started_at::date >= ${range.start}::date
+            AND started_at::date <= ${range.end}::date
           GROUP BY user_id, DATE_TRUNC('week', started_at)::date
         )
         SELECT
@@ -364,21 +372,26 @@ export interface LifecycleDistribution {
 /**
  * 查询用户生命周期阶段分布
  * 基于 user.created_at 计算：<7天 / 7-30天 / 30-90天 / >90天
+ * 仅统计在指定日期范围内有会话记录的用户
+ * @param range - 日期范围，用于过滤活跃用户
  * @returns 各阶段用户数
  */
-export async function queryLifecycleDistribution(): Promise<LifecycleDistribution[]> {
+export async function queryLifecycleDistribution(range: DateRange): Promise<LifecycleDistribution[]> {
   const result = await db.execute<{
     stage: string; count: number;
   }>(
     sql`SELECT
           CASE
-            WHEN created_at >= NOW() - INTERVAL '7 days' THEN 'new'
-            WHEN created_at >= NOW() - INTERVAL '30 days' THEN 'active'
-            WHEN created_at >= NOW() - INTERVAL '90 days' THEN 'settled'
+            WHEN u.created_at >= NOW() - INTERVAL '7 days' THEN 'new'
+            WHEN u.created_at >= NOW() - INTERVAL '30 days' THEN 'active'
+            WHEN u.created_at >= NOW() - INTERVAL '90 days' THEN 'settled'
             ELSE 'veteran'
           END as stage,
-          COUNT(*)::int as count
-        FROM "user"
+          COUNT(DISTINCT u.id)::int as count
+        FROM "user" u
+        INNER JOIN sessions s ON s.user_id = u.id
+          AND s.started_at::date >= ${range.start}::date
+          AND s.started_at::date <= ${range.end}::date
         GROUP BY stage
         ORDER BY
           CASE

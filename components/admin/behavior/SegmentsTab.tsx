@@ -72,7 +72,8 @@ export default function SegmentsTab({ dateRange }: SegmentsTabProps) {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('/api/admin/behavior/segments');
+        const params = new URLSearchParams({ start: dateRange.start, end: dateRange.end });
+        const res = await fetch(`/api/admin/behavior/segments?${params}`);
         if (!res.ok) throw new Error('获取用户分层数据失败');
         const json: SegmentsData = await res.json();
         setData(json);
