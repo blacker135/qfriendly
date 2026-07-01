@@ -38,3 +38,51 @@
 2. 对比 `.env.vercel.*` 与 `.env.local`，手动同步需要一致的变量
 3. `vercel env add` 或 Dashboard 修改远程变量后，重新执行步骤 1
 
+# 项目结构速览
+
+```
+qfriendly/
+├── app/                       # Next.js App Router
+│   ├── [lang]/                # 用户端页面 (en/zh)
+│   ├── admin/                 # 管理后台页面
+│   └── api/                   # API 路由（18 个接口）
+├── components/                # React 组件（按功能域分组）
+├── lib/                       # 服务层
+│   ├── admin/guard.ts         # 管理员权限守卫
+│   ├── auth/                  # Better Auth 实例
+│   ├── db/                    # Drizzle ORM Schema + 连接
+│   ├── deepseek/client.ts     # DeepSeek API 客户端
+│   ├── paypal/                # PayPal API + Plan 映射
+│   ├── prompts/experts.ts     # 专家 System Prompt
+│   ├── stats/                 # 数据统计查询引擎
+│   └── subscription/gate.ts   # 订阅门控
+├── i18n/                      # next-intl 配置
+├── messages/                  # 翻译文件 (en.json, zh.json)
+├── scripts/                   # 运维脚本
+└── __tests__/                 # 单元测试
+```
+
+# 模块索引
+
+快速定位：想改 X → 找 Y 文件 → 参考 Z 文档
+
+| 需求 | 入口文件 | 参考文档 |
+|------|----------|----------|
+| 修改专家人格/System Prompt | `lib/prompts/experts.ts` | 产品文档 §AI 情感对话 |
+| 修改 AI 模型/API 地址 | `lib/deepseek/client.ts` | 技术文档 §核心架构决策 |
+| 修改订阅方案/定价 | 环境变量 PAYPAL_PLAN_* | 产品文档 §订阅方案 |
+| 修改门控逻辑（试用/限额） | `lib/subscription/gate.ts` | 技术文档 §订阅门控 |
+| 添加 API 接口 | `app/api/**/route.ts` | API 接口文档 |
+| 修改数据库表结构 | `lib/db/schema.ts` | 数据库文档 |
+| 修改前端页面 | `app/**/page.tsx` | UI 设计文档 §页面结构 |
+| 修改组件 | `components/**/*.tsx` | UI 设计文档 §组件体系 |
+| 修改国际化文案 | `messages/en.json` `messages/zh.json` | — |
+| 管理后台功能 | `app/admin/**` `components/admin/**` | API 文档 §管理后台模块 |
+| 统计查询 | `lib/stats/query.ts` | 技术文档 §数据统计引擎 |
+| 部署/环境变量 | 环境变量文件 + `vercel.json` | 技术文档 §部署 |
+
+# 文档同步规则
+- 功能变更后，检查 docs/项目文档/ 下对应文件是否需要更新
+- 每次文档修改，更新头部「最后更新」日期和「对应 commit」
+- 部署前检查：git log 中新功能/改接口/改表结构的 commit 日期晚于文档日期时，先更新再部署
+
