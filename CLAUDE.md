@@ -20,6 +20,8 @@
 - GitHub 推送采用 SSH 方式（远程地址: git@github.com:blacker135/qfriendly.git），SSH 密钥已配置于 ~/.ssh/id_ed25519
 - Vercel 项目名称: qfriendly（链接在 qfriendly/ 目录下）
 - 禁止本地运行项目，如需运行项目，则在 vercel 上运行
+- 项目唯一 git 仓库位于 qfriendly/，所有 git 操作（commit/push/pull/log）必须在此目录下执行
+- 编写 plan 时，对代码的引用（文件路径、配置值、常数值）必须先实际读取源文件确认，禁止凭记忆写入
 
 # 强制 sudo 执行命令行的命令
 - npm 相关命令
