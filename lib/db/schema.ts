@@ -199,3 +199,43 @@ export const analyticsRetention = pgTable('analytics_retention', {
 }, (table) => ({
   cohortDayUnique: uniqueIndex('idx_retention_cohort_day').on(table.cohortDate, table.dayN),
 }));
+
+// ============================================================
+// 订阅事件溯源表
+// 每笔订阅状态变更记录一条事件，用于收入分析
+// ============================================================
+
+export const subscriptionEvents = pgTable('subscription_events', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  eventType: text('event_type').notNull(),
+  plan: text('plan').notNull(),
+  billingPeriod: text('billing_period'),
+  amount: numeric('amount', { precision: 10, scale: 2 }),
+  paypalSubscriptionId: text('paypal_subscription_id').notNull(),
+  previousPlan: text('previous_plan'),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  userCreatedIdx: index('idx_sub_events_user').on(table.userId, table.createdAt),
+  typeCreatedIdx: index('idx_sub_events_type').on(table.eventType, table.createdAt),
+}));
+
+// ============================================================
+// MRR 物化快照表
+// 每日 Cron 聚合的 MRR 缓存数据
+// ============================================================
+
+export const mrrSnapshots = pgTable('mrr_snapshots', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  date: date('date').notNull(),
+  plan: text('plan').notNull(),
+  mrrValue: numeric('mrr_value', { precision: 12, scale: 2 }).notNull().default('0'),
+  subscriberCount: integer('subscriber_count').notNull().default(0),
+  newCount: integer('new_count').default(0),
+  churnCount: integer('churn_count').default(0),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  datePlanUnique: uniqueIndex('idx_mrr_date_plan').on(table.date, table.plan),
+}));

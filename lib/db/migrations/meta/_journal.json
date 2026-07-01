@@ -50,6 +50,13 @@
       "when": 1778659218642,
       "tag": "0006_add_daily_limit",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1782895404210,
+      "tag": "0007_subscription_analytics",
+      "breakpoints": true
     }
   ]
 }
