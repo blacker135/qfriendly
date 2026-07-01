@@ -11,10 +11,13 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
+import HeartbeatPulse from '@/components/chat/HeartbeatPulse';
 
 /**
- * 聊天布局 — Auth 守卫
- * 所有 /[lang]/chat/* 路由都会经过此布局进行身份验证
+ * 聊天布局 — Auth 守卫 + 心跳脉冲
+ * 所有 /[lang]/chat/* 路由都会经过此布局：
+ *   1. 身份验证（未登录跳转登录页）
+ *   2. 嵌入心跳脉冲组件，跟踪用户会话活跃度
  */
 export default async function ChatLayout({
   children,
@@ -31,6 +34,11 @@ export default async function ChatLayout({
     redirect(`/${lang}/auth/login`);
   }
 
-  // 已登录 → 渲染子页面
-  return <>{children}</>;
+  // 已登录 → 渲染子页面 + 心跳组件
+  return (
+    <>
+      <HeartbeatPulse />
+      {children}
+    </>
+  );
 }
