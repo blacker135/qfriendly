@@ -4,7 +4,7 @@
 import { db, schema } from '@/lib/db';
 import { eq } from 'drizzle-orm';
 import { verifyWebhookSignature, getVariantName } from '@/lib/paypal';
-import { trackSubscriptionEvent, getBillingPeriod, getPlanChangeDirection } from '@/lib/stats/revenue';
+import { trackSubscriptionEvent, getBillingPeriod, getPlanChangeDirection, validatePlanVariant } from '@/lib/stats/revenue';
 import type { PlanVariant } from '@/lib/stats/revenue';
 
 interface PayPalWebhookEvent {
@@ -87,13 +87,16 @@ export async function POST(request: Request) {
 
         // 异步写入订阅事件流水（fire-and-forget，不阻塞 webhook 响应）
         const billingPeriod = planId ? getBillingPeriod(planId) : undefined;
-        trackSubscriptionEvent({
-          userId: '', // webhook 阶段尚无 userId，后续可通过 activate API 关联
-          eventType: eventType === 'BILLING.SUBSCRIPTION.ACTIVATED' ? 'created' : 'renewed',
-          plan: variantName as PlanVariant,
-          billingPeriod,
-          paypalSubscriptionId: subId,
-        });
+        const validPlan = validatePlanVariant(variantName);
+        if (validPlan) {
+          trackSubscriptionEvent({
+            userId: null, // webhook 阶段尚无 userId，后续通过 activate API 回填
+            eventType: eventType === 'BILLING.SUBSCRIPTION.ACTIVATED' ? 'created' : 'renewed',
+            plan: validPlan,
+            billingPeriod,
+            paypalSubscriptionId: subId,
+          });
+        }
         break;
       }
 
@@ -130,12 +133,15 @@ export async function POST(request: Request) {
 
         // 异步写入订阅事件流水（取消/过期）
         if (isCancelOrExpire && existingSub) {
-          trackSubscriptionEvent({
-            userId: existingSub.userId || '',
-            eventType: eventType === 'BILLING.SUBSCRIPTION.CANCELLED' ? 'cancelled' : 'expired',
-            plan: existingSub.variantName as PlanVariant,
-            paypalSubscriptionId: subId,
-          });
+          const validPlan = validatePlanVariant(existingSub.variantName);
+          if (validPlan) {
+            trackSubscriptionEvent({
+              userId: existingSub.userId || null,
+              eventType: eventType === 'BILLING.SUBSCRIPTION.CANCELLED' ? 'cancelled' : 'expired',
+              plan: validPlan,
+              paypalSubscriptionId: subId,
+            });
+          }
         }
         break;
       }
@@ -145,7 +151,6 @@ export async function POST(request: Request) {
         const oldRow = await db.query.subscriptions.findFirst({
           where: eq(schema.subscriptions.paypalSubscriptionId, subId),
         });
-        const userId = oldRow?.userId || '';
         const oldVariant = oldRow?.variantName as PlanVariant | undefined;
 
         const updates: Record<string, unknown> = {};
@@ -170,15 +175,19 @@ export async function POST(request: Request) {
 
         // 异步写入订阅事件流水（方案变更：升级或降级）
         if (newVariant && oldVariant && newVariant !== oldVariant) {
-          const direction = getPlanChangeDirection(oldVariant, newVariant as PlanVariant);
-          if (direction) {
-            trackSubscriptionEvent({
-              userId,
-              eventType: direction,
-              plan: newVariant as PlanVariant,
-              previousPlan: oldVariant,
-              paypalSubscriptionId: subId,
-            });
+          const validNew = validatePlanVariant(newVariant);
+          const validOld = validatePlanVariant(oldVariant);
+          if (validNew && validOld) {
+            const direction = getPlanChangeDirection(validOld, validNew);
+            if (direction) {
+              trackSubscriptionEvent({
+                userId: oldRow?.userId || null,
+                eventType: direction,
+                plan: validNew,
+                previousPlan: validOld,
+                paypalSubscriptionId: subId,
+              });
+            }
           }
         }
         break;

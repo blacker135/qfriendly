@@ -1,6 +1,6 @@
 {
-  "id": "4df5c848-6f86-4d77-8c95-c869ebe2ab8f",
-  "prevId": "5b3222d5-c249-456e-b39c-769ce7a86082",
+  "id": "48cc3b8e-8448-4675-b65e-dd3bc692f6f7",
+  "prevId": "4df5c848-6f86-4d77-8c95-c869ebe2ab8f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -629,7 +629,7 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         }
       },
@@ -835,7 +835,7 @@
           "name": "user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "event_type": {
           "name": "event_type",
@@ -877,7 +877,7 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         }
       },
@@ -936,7 +936,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },

@@ -70,6 +70,14 @@ export async function POST(request: Request) {
         },
       });
 
+    // 回填 subscription_events 中该订阅的 userId（webhook 阶段 userId 为 null）
+    await db
+      .update(schema.subscriptionEvents)
+      .set({ userId: session.user.id })
+      .where(
+        eq(schema.subscriptionEvents.paypalSubscriptionId, body.subscription_id)
+      );
+
     return Response.json({ success: true, variant: variantName });
   } catch (err) {
     console.error('Subscription activation failed:', err);

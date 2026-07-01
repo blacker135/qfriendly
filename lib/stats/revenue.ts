@@ -18,6 +18,25 @@ export type SubscriptionEventType =
 /** 方案标识 */
 export type PlanVariant = 'start' | 'pro' | 'ultra' | 'admin';
 
+/** 有效 PlanVariant 值集合，用于运行时校验 */
+const VALID_PLAN_VARIANTS: ReadonlySet<string> = new Set<PlanVariant>(['start', 'pro', 'ultra', 'admin']);
+
+/**
+ * 运行时校验字符串是否为有效的 PlanVariant
+ * 防止 `as PlanVariant` 类型断言引入无效值导致 PLAN_RANK 查询返回 undefined
+ * @param value - 待校验的字符串
+ * @returns 有效的 PlanVariant，若无效则返回 null 并输出警告
+ */
+export function validatePlanVariant(value: string | null | undefined): PlanVariant | null {
+  if (value && VALID_PLAN_VARIANTS.has(value)) {
+    return value as PlanVariant;
+  }
+  if (value) {
+    console.warn('[RevenueTracker] 未知的 PlanVariant 值:', value);
+  }
+  return null;
+}
+
 /** 方案等级排序（用于升级/降级判断） */
 const PLAN_RANK: Record<PlanVariant, number> = {
   start: 1,
@@ -66,9 +85,10 @@ export function getBillingPeriod(planId: string): 'monthly' | 'yearly' | undefin
 /**
  * 记录订阅事件（异步 fire-and-forget，不阻塞 webhook 响应）
  * 在 PayPal Webhook 处理中调用，写入 subscription_events 表
+ * @param params.userId - 用户 ID，webhook 阶段可能为 null（ACTIVATED/RENEWED 尚无 userId）
  */
 export function trackSubscriptionEvent(params: {
-  userId: string;
+  userId: string | null;
   eventType: SubscriptionEventType;
   plan: PlanVariant;
   billingPeriod?: 'monthly' | 'yearly';

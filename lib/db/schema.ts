@@ -207,9 +207,10 @@ export const analyticsRetention = pgTable('analytics_retention', {
 
 export const subscriptionEvents = pgTable('subscription_events', {
   id: uuid('id').defaultRandom().primaryKey(),
+  // user_id 可为 null：webhook 阶段（ACTIVATED/RENEWED）尚无 userId，
+  // 后续通过 activate API 回填。使用 ON DELETE SET NULL 避免级联删除事件记录。
   userId: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
+    .references(() => user.id, { onDelete: 'set null' }),
   eventType: text('event_type').notNull(),
   plan: text('plan').notNull(),
   billingPeriod: text('billing_period'),
