@@ -120,8 +120,17 @@ async function fetchDAU(date: string): Promise<number> {
   return r.rows[0]?.count ?? 0;
 }
 
-/** 付费用户数 */
-async function fetchPayingUsers(): Promise<number> {
+/** 付费用户数（可选日期参数，传入时查询截至该日期的活跃付费用户） */
+async function fetchPayingUsers(date?: string): Promise<number> {
+  if (date) {
+    // 查询截至指定日期仍处于活跃状态的付费订阅（排除 admin 方案）
+    const r = await db.execute<{ count: number }>(
+      sql`SELECT COUNT(*)::int as count FROM subscriptions
+          WHERE status = 'active' AND variant_name != 'admin'
+            AND created_at <= ${date}::date`
+    );
+    return r.rows[0]?.count ?? 0;
+  }
   const r = await db.execute<{ count: number }>(
     sql`SELECT COUNT(*)::int as count FROM subscriptions WHERE status = 'active' AND variant_name != 'admin'`
   );
@@ -256,7 +265,7 @@ export async function POST(req: NextRequest) {
             ORDER BY snapshot_date DESC LIMIT 1`
       ).then((r) => Number(r.rows[0]?.amount ?? 0)),
       fetchDAU(prevRange.end),
-      fetchPayingUsers(),
+      fetchPayingUsers(prevRange.end),
       fetchChurnRate(prevRange),
       db.execute<{ count: number }>(
         sql`SELECT COUNT(*)::int as count FROM messages

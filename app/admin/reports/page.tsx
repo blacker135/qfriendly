@@ -11,6 +11,7 @@ const EXPORT_TARGETS = [
   { value: 'dashboard:summary', label: '仪表盘汇总', module: 'dashboard', tab: 'summary' },
   { value: 'revenue:overview', label: '收入概览', module: 'revenue', tab: 'overview' },
   { value: 'revenue:funnel', label: '转化漏斗', module: 'revenue', tab: 'funnel' },
+  { value: 'revenue:trend', label: '收入趋势', module: 'revenue', tab: 'trend' },
   { value: 'revenue:churn', label: '流失分析', module: 'revenue', tab: 'churn' },
   { value: 'behavior:activity', label: '用户活跃度', module: 'behavior', tab: 'activity' },
   { value: 'behavior:engagement', label: '互动数据', module: 'behavior', tab: 'engagement' },

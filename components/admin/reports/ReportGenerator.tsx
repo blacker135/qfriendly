@@ -187,7 +187,7 @@ export default function ReportGenerator({
       setProgress(0);
       return null;
     } finally {
-      setLoading(false);
+      // 不在此处设置 setLoading(false)，由调用方管理 loading 状态
     }
   }, [reportType, dateRange]);
 
