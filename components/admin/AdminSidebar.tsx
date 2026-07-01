@@ -29,6 +29,7 @@ const navGroups: NavGroup[] = [
     items: [
       { href: '/admin/stats/project', label: '项目统计' },
       { href: '/admin/stats/traffic', label: '流量统计' },
+      { href: '/admin/settings', label: '统计设置' },
     ],
   },
 ];
