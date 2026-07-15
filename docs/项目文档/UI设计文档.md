@@ -1,6 +1,6 @@
 ---
-最后更新: 2026-07-01
-对应 commit: 63e413f
+最后更新: 2026-07-15
+对应 commit: 915782e
 覆盖模块: UI 组件体系 + 页面结构
 ---
 
@@ -79,6 +79,8 @@
 - `TrafficChart` — 流量图表
 - `NavbarAdminLink` — 导航栏管理入口
 - `AdminRedirect` — 非管理员重定向
+### prompts（专家提示词编辑）
+- `PromptEditor` — 专家提示词在线编辑器（三层 Tab + 编辑区 + 保存）
 
 ## 国际化
 
