@@ -57,6 +57,12 @@
   to { transform: translateX(0); }
 }
 
+/* Toast 入场动画 */
+@keyframes toastIn {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 @layer utilities {
   .animate-slide-in-left {
     animation: slideInLeft 0.25s ease-out;
