@@ -244,11 +244,13 @@ export function getExpertPrompt(expertId: ExpertId, language: Language): string 
   //    （fire-and-forget 模式：本次请求使用默认值，下次请求命中缓存）
   const defaultPrompt = BASE_PROMPTS[expertId][language];
 
-  getPromptFromDB(expertId, language, 'system').then((dbContent) => {
-    if (dbContent !== null) {
-      setCachedPrompt(expertId, language, 'system', dbContent);
-    }
-  });
+  getPromptFromDB(expertId, language, 'system')
+    .then((dbContent) => {
+      if (dbContent !== null) {
+        setCachedPrompt(expertId, language, 'system', dbContent);
+      }
+    })
+    .catch((err) => console.error('prompt cache warm failed (system):', err));
 
   return defaultPrompt;
 }
@@ -281,11 +283,13 @@ export function getSwitchPrompt(
     // 2. 缓存未命中 → 回退到全局模板，异步从 DB 加载
     template = language === 'en' ? SWITCH_PROMPT_EN : SWITCH_PROMPT_ZH;
 
-    getPromptFromDB(expertId, language, 'switch').then((dbContent) => {
-      if (dbContent !== null) {
-        setCachedPrompt(expertId, language, 'switch', dbContent);
-      }
-    });
+    getPromptFromDB(expertId, language, 'switch')
+      .then((dbContent) => {
+        if (dbContent !== null) {
+          setCachedPrompt(expertId, language, 'switch', dbContent);
+        }
+      })
+      .catch((err) => console.error('prompt cache warm failed (switch):', err));
   }
 
   return template
@@ -310,11 +314,13 @@ export function getWelcomeMessage(expertId: ExpertId, language: Language): strin
   // 2. 缓存未命中 → 返回硬编码默认值，同时异步从 DB 加载到缓存
   const defaultMsg = WELCOME_MESSAGES[expertId][language];
 
-  getPromptFromDB(expertId, language, 'welcome').then((dbContent) => {
-    if (dbContent !== null) {
-      setCachedPrompt(expertId, language, 'welcome', dbContent);
-    }
-  });
+  getPromptFromDB(expertId, language, 'welcome')
+    .then((dbContent) => {
+      if (dbContent !== null) {
+        setCachedPrompt(expertId, language, 'welcome', dbContent);
+      }
+    })
+    .catch((err) => console.error('prompt cache warm failed (welcome):', err));
 
   return defaultMsg;
 }
