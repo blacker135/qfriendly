@@ -277,3 +277,20 @@ export const analyticsSettings = pgTable('analytics_settings', {
   description: text('description'),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+// ============================================================
+// 专家提示词设置表
+// 支持管理员在线编辑四位专家的 System Prompt / 欢迎语 / 切换模板
+// ============================================================
+
+export const expertPrompts = pgTable('expert_prompts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  expert: expertEnum('expert').notNull(),
+  language: languageEnum('language').notNull(),
+  promptType: text('prompt_type').notNull(), // 'system' | 'welcome' | 'switch'
+  content: text('content').notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  uniqueConstraint: uniqueIndex('idx_expert_prompts_unique')
+    .on(table.expert, table.language, table.promptType),
+}));
