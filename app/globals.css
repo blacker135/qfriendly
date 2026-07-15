@@ -18,6 +18,7 @@
   --radius-container: 32px;
   --shadow-soft: 0 10px 40px rgba(0,0,0,0.06);
   --font-family-sans: 'Inter', 'SF Pro Display', 'PingFang SC', 'HarmonyOS Sans', sans-serif;
+  --font-family-mono: 'Fira Code', ui-monospace, SFMono-Regular, monospace;
 }
 
 @layer base {
