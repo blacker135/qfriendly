@@ -13,6 +13,7 @@ import {
   BarChart3,
   Download,
   Settings,
+  Bot,
 } from 'lucide-react';
 
 /** 导航项类型 — icon 使用 Lucide React 组件 */
@@ -51,6 +52,7 @@ const navGroups: { label: string; items: NavItem[] }[] = [
     label: '工具',
     items: [
       { href: '/admin/reports', label: '报表导出', icon: Download },
+      { href: '/admin/prompts', label: '智能体提示词', icon: Bot },
       { href: '/admin/settings', label: '统计设置', icon: Settings },
     ],
   },
