@@ -1,5 +1,9 @@
 // 专家 System Prompt 系统
 // 定义四位情感顾问的角色提示词，支持中英双语
+// 读取链路: 内存缓存 → DB → 硬编码默认值
+
+import { getCachedPrompt, setCachedPrompt } from './cache';
+import { getPromptFromDB } from './store';
 
 // ============================================================
 // 类型定义
@@ -225,23 +229,40 @@ const WELCOME_MESSAGES: Record<ExpertId, Record<Language, string>> = {
 
 /**
  * 获取指定专家的 System Prompt（根据语言选择）
+ * 优先级: 内存缓存 → DB → 硬编码默认值
  *
  * @param expertId - 专家标识符 ('evan' | 'liam' | 'noah' | 'adrian')
  * @param language - 语言 ('en' | 'zh')
  * @returns 对应语言的角色设定提示词
  */
 export function getExpertPrompt(expertId: ExpertId, language: Language): string {
-  return BASE_PROMPTS[expertId][language];
+  // 1. 尝试缓存
+  const cached = getCachedPrompt(expertId, language, 'system');
+  if (cached !== null) return cached;
+
+  // 2. 缓存未命中 → 返回硬编码默认值，同时异步从 DB 加载到缓存
+  //    （fire-and-forget 模式：本次请求使用默认值，下次请求命中缓存）
+  const defaultPrompt = BASE_PROMPTS[expertId][language];
+
+  getPromptFromDB(expertId, language, 'system').then((dbContent) => {
+    if (dbContent !== null) {
+      setCachedPrompt(expertId, language, 'system', dbContent);
+    }
+  });
+
+  return defaultPrompt;
 }
 
 /**
  * 获取切换专家时的过渡提示词（有对话历史时使用）
  * 将 {name}, {title}, {context} 占位符替换为实际值
+ * 优先级: 内存缓存 → DB → 硬编码全局模板（回退用）
  *
  * @param name - 新专家的名称
  * @param title - 新专家的头衔
  * @param context - 此前的对话摘要
  * @param language - 语言 ('en' | 'zh')
+ * @param expertId - 专家标识符，用于按专家缓存/查询切换模板
  * @returns 组装完成的过渡提示词
  */
 export function getSwitchPrompt(
@@ -249,20 +270,53 @@ export function getSwitchPrompt(
   title: string,
   context: string,
   language: Language,
+  expertId: ExpertId,
 ): string {
-  const template = language === 'en' ? SWITCH_PROMPT_EN : SWITCH_PROMPT_ZH;
-  return template.replace('{name}', name).replace('{title}', title).replace('{context}', context);
+  // 1. 尝试缓存（按专家存储的切换模板）
+  const cached = getCachedPrompt(expertId, language, 'switch');
+  let template: string;
+  if (cached !== null) {
+    template = cached;
+  } else {
+    // 2. 缓存未命中 → 回退到全局模板，异步从 DB 加载
+    template = language === 'en' ? SWITCH_PROMPT_EN : SWITCH_PROMPT_ZH;
+
+    getPromptFromDB(expertId, language, 'switch').then((dbContent) => {
+      if (dbContent !== null) {
+        setCachedPrompt(expertId, language, 'switch', dbContent);
+      }
+    });
+  }
+
+  return template
+    .replace('{name}', name)
+    .replace('{title}', title)
+    .replace('{context}', context);
 }
 
 /**
  * 获取指定专家的默认欢迎语（首次见面或切换无历史时使用）
+ * 优先级: 内存缓存 → DB → 硬编码默认值
  *
  * @param expertId - 专家标识符
  * @param language - 语言 ('en' | 'zh')
  * @returns 对应语言和专家的欢迎语
  */
 export function getWelcomeMessage(expertId: ExpertId, language: Language): string {
-  return WELCOME_MESSAGES[expertId][language];
+  // 1. 尝试缓存
+  const cached = getCachedPrompt(expertId, language, 'welcome');
+  if (cached !== null) return cached;
+
+  // 2. 缓存未命中 → 返回硬编码默认值，同时异步从 DB 加载到缓存
+  const defaultMsg = WELCOME_MESSAGES[expertId][language];
+
+  getPromptFromDB(expertId, language, 'welcome').then((dbContent) => {
+    if (dbContent !== null) {
+      setCachedPrompt(expertId, language, 'welcome', dbContent);
+    }
+  });
+
+  return defaultMsg;
 }
 
 /**

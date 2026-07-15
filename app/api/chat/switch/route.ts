@@ -102,7 +102,7 @@ export async function POST(request: Request) {
     .join('\n\n');
 
   const expertInfo = getExpertInfo(expertId, lang);
-  const switchPrompt = getSwitchPrompt(expertInfo.name, expertInfo.title, context, lang);
+  const switchPrompt = getSwitchPrompt(expertInfo.name, expertInfo.title, context, lang, expertId);
 
   const deepseek = createDeepSeekClient();
   const encoder = new TextEncoder();

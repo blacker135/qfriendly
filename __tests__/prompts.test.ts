@@ -25,7 +25,7 @@ describe('Expert Prompts', () => {
 
   // ---------- 切换提示词占位符替换 ----------
   it('switch prompt replaces placeholders', () => {
-    const result = getSwitchPrompt('Test', 'The Tester', 'Context here', 'en');
+    const result = getSwitchPrompt('Test', 'The Tester', 'Context here', 'en', 'evan');
     expect(result).toContain('Test');
     expect(result).toContain('The Tester');
     expect(result).toContain('Context here');
@@ -36,7 +36,7 @@ describe('Expert Prompts', () => {
   });
 
   it('switch prompt supports Chinese language', () => {
-    const result = getSwitchPrompt('测试', '测试者', '背景信息', 'zh');
+    const result = getSwitchPrompt('测试', '测试者', '背景信息', 'zh', 'liam');
     expect(result).toContain('测试');
     expect(result).toContain('测试者');
     expect(result).toContain('背景信息');
