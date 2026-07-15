@@ -1,10 +1,10 @@
 // 专家 System Prompt 系统
 // 定义四位情感顾问的角色提示词，支持中英双语
-// 读取链路: 内存缓存 → DB → 硬编码默认值
+// 读取链路: 内存缓存 → 硬编码默认值
+// 注意: 此文件可被客户端组件引用，禁止 import 任何含 Node.js 原生模块的文件
+// 缓存由 lib/prompts/warm-cache.ts（服务端专用）在 chat API 请求前预热
 
-import { getCachedPrompt, setCachedPrompt } from './cache';
-// 注意: store.ts 包含 pg (node-postgres)，不能顶层导入，否则客户端 bundle 报错
-// 使用动态 import() 确保 pg 仅在服务端运行时加载
+import { getCachedPrompt } from './cache';
 
 // ============================================================
 // 类型定义
@@ -237,25 +237,12 @@ const WELCOME_MESSAGES: Record<ExpertId, Record<Language, string>> = {
  * @returns 对应语言的角色设定提示词
  */
 export function getExpertPrompt(expertId: ExpertId, language: Language): string {
-  // 1. 尝试缓存
+  // 1. 尝试缓存（由 warm-cache.ts 预热）
   const cached = getCachedPrompt(expertId, language, 'system');
   if (cached !== null) return cached;
 
-  // 2. 缓存未命中 → 返回硬编码默认值，同时异步从 DB 加载到缓存
-  //    （fire-and-forget 模式：本次请求使用默认值，下次请求命中缓存）
-  const defaultPrompt = BASE_PROMPTS[expertId][language];
-
-  // 动态 import 确保 pg 不在客户端 bundle 中
-  import('./store')
-    .then(({ getPromptFromDB }) => getPromptFromDB(expertId, language, 'system'))
-    .then((dbContent) => {
-      if (dbContent !== null) {
-        setCachedPrompt(expertId, language, 'system', dbContent);
-      }
-    })
-    .catch((err) => console.error('prompt cache warm failed (system):', err));
-
-  return defaultPrompt;
+  // 2. 缓存未命中 → 返回硬编码默认值
+  return BASE_PROMPTS[expertId][language];
 }
 
 /**
@@ -279,22 +266,9 @@ export function getSwitchPrompt(
 ): string {
   // 1. 尝试缓存（按专家存储的切换模板）
   const cached = getCachedPrompt(expertId, language, 'switch');
-  let template: string;
-  if (cached !== null) {
-    template = cached;
-  } else {
-    // 2. 缓存未命中 → 回退到全局模板，异步从 DB 加载
-    template = language === 'en' ? SWITCH_PROMPT_EN : SWITCH_PROMPT_ZH;
-
-    import('./store')
-      .then(({ getPromptFromDB }) => getPromptFromDB(expertId, language, 'switch'))
-      .then((dbContent) => {
-        if (dbContent !== null) {
-          setCachedPrompt(expertId, language, 'switch', dbContent);
-        }
-      })
-      .catch((err) => console.error('prompt cache warm failed (switch):', err));
-  }
+  const template = cached !== null
+    ? cached
+    : (language === 'en' ? SWITCH_PROMPT_EN : SWITCH_PROMPT_ZH);
 
   return template
     .replace('{name}', name)
@@ -311,23 +285,12 @@ export function getSwitchPrompt(
  * @returns 对应语言和专家的欢迎语
  */
 export function getWelcomeMessage(expertId: ExpertId, language: Language): string {
-  // 1. 尝试缓存
+  // 1. 尝试缓存（由 warm-cache.ts 预热）
   const cached = getCachedPrompt(expertId, language, 'welcome');
   if (cached !== null) return cached;
 
-  // 2. 缓存未命中 → 返回硬编码默认值，同时异步从 DB 加载到缓存
-  const defaultMsg = WELCOME_MESSAGES[expertId][language];
-
-  import('./store')
-    .then(({ getPromptFromDB }) => getPromptFromDB(expertId, language, 'welcome'))
-    .then((dbContent) => {
-      if (dbContent !== null) {
-        setCachedPrompt(expertId, language, 'welcome', dbContent);
-      }
-    })
-    .catch((err) => console.error('prompt cache warm failed (welcome):', err));
-
-  return defaultMsg;
+  // 2. 缓存未命中 → 返回硬编码默认值
+  return WELCOME_MESSAGES[expertId][language];
 }
 
 /**

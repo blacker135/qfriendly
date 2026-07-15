@@ -11,6 +11,7 @@ import { eq, asc, count } from 'drizzle-orm';
 import { createDeepSeekClient } from '@/lib/deepseek/client';
 import { getSwitchPrompt, getWelcomeMessage, getExpertInfo } from '@/lib/prompts/experts';
 import type { ExpertId, Language } from '@/lib/prompts/experts';
+import { warmExpertCache } from '@/lib/prompts/warm-cache';
 import { checkSubscriptionGate } from '@/lib/subscription/gate';
 
 export async function POST(request: Request) {
@@ -64,6 +65,9 @@ export async function POST(request: Request) {
 
   const expertId = new_expert as ExpertId;
   const lang = language as Language;
+
+  // 预热缓存：从 DB 加载管理员自定义提示词到内存
+  await warmExpertCache(expertId, lang);
 
   // 立即更新对话的专家（在生成过渡消息之前）
   await db

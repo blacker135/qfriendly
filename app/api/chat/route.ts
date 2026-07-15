@@ -11,6 +11,7 @@ import { eq, asc } from 'drizzle-orm';
 import { createDeepSeekClient } from '@/lib/deepseek/client';
 import { getExpertPrompt } from '@/lib/prompts/experts';
 import type { ExpertId, Language } from '@/lib/prompts/experts';
+import { warmExpertCache } from '@/lib/prompts/warm-cache';
 import { checkSubscriptionGate } from '@/lib/subscription/gate';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -125,6 +126,9 @@ export async function POST(request: Request) {
     .where(eq(schema.messages.conversationId, conversationId))
     .orderBy(asc(schema.messages.createdAt))
     .limit(20);
+
+  // 预热缓存：从 DB 加载管理员自定义提示词到内存
+  await warmExpertCache(expert as ExpertId, language as Language);
 
   const systemPrompt = getExpertPrompt(expert as ExpertId, language as Language);
   const chatMessages = [
