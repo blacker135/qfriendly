@@ -3,7 +3,8 @@
 // 读取链路: 内存缓存 → DB → 硬编码默认值
 
 import { getCachedPrompt, setCachedPrompt } from './cache';
-import { getPromptFromDB } from './store';
+// 注意: store.ts 包含 pg (node-postgres)，不能顶层导入，否则客户端 bundle 报错
+// 使用动态 import() 确保 pg 仅在服务端运行时加载
 
 // ============================================================
 // 类型定义
@@ -244,7 +245,9 @@ export function getExpertPrompt(expertId: ExpertId, language: Language): string 
   //    （fire-and-forget 模式：本次请求使用默认值，下次请求命中缓存）
   const defaultPrompt = BASE_PROMPTS[expertId][language];
 
-  getPromptFromDB(expertId, language, 'system')
+  // 动态 import 确保 pg 不在客户端 bundle 中
+  import('./store')
+    .then(({ getPromptFromDB }) => getPromptFromDB(expertId, language, 'system'))
     .then((dbContent) => {
       if (dbContent !== null) {
         setCachedPrompt(expertId, language, 'system', dbContent);
@@ -283,7 +286,8 @@ export function getSwitchPrompt(
     // 2. 缓存未命中 → 回退到全局模板，异步从 DB 加载
     template = language === 'en' ? SWITCH_PROMPT_EN : SWITCH_PROMPT_ZH;
 
-    getPromptFromDB(expertId, language, 'switch')
+    import('./store')
+      .then(({ getPromptFromDB }) => getPromptFromDB(expertId, language, 'switch'))
       .then((dbContent) => {
         if (dbContent !== null) {
           setCachedPrompt(expertId, language, 'switch', dbContent);
@@ -314,7 +318,8 @@ export function getWelcomeMessage(expertId: ExpertId, language: Language): strin
   // 2. 缓存未命中 → 返回硬编码默认值，同时异步从 DB 加载到缓存
   const defaultMsg = WELCOME_MESSAGES[expertId][language];
 
-  getPromptFromDB(expertId, language, 'welcome')
+  import('./store')
+    .then(({ getPromptFromDB }) => getPromptFromDB(expertId, language, 'welcome'))
     .then((dbContent) => {
       if (dbContent !== null) {
         setCachedPrompt(expertId, language, 'welcome', dbContent);
