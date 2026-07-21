@@ -70,7 +70,8 @@ qfriendly/
 
 | 需求 | 入口文件 | 参考文档 |
 |------|----------|----------|
-| 修改专家人格/System Prompt | `lib/prompts/experts.ts` | 产品文档 §AI 情感对话 |
+| 智能体设计（四位专家完整文档） | `docs/项目文档/智能体文档.md` | 智能体文档 |
+| 修改专家人格/System Prompt | `lib/prompts/experts.ts` | 智能体文档 / 产品文档 §AI 情感对话 |
 | 修改 AI 模型/API 地址 | `lib/deepseek/client.ts` | 技术文档 §核心架构决策 |
 | 修改订阅方案/定价 | 环境变量 PAYPAL_PLAN_* | 产品文档 §订阅方案 |
 | 修改门控逻辑（试用/限额） | `lib/subscription/gate.ts` | 技术文档 §订阅门控 |
