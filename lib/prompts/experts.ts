@@ -49,15 +49,15 @@ const EXPERT_INFO: Record<ExpertId, { name: string; title: { en: string; zh: str
   noah: {
     name: 'Noah Sinclair',
     title: {
-      en: 'The Relationship Architect',
-      zh: '关系建构师',
+      en: 'Relationship Strategist',
+      zh: '人际关系策略师',
     },
   },
   adrian: {
     name: 'Dr. Adrian Cole',
     title: {
-      en: 'The Relationship Emergency Specialist',
-      zh: '关系急救专家',
+      en: 'Crisis & Recovery Advisor',
+      zh: '关系危机顾问',
     },
   },
 };
