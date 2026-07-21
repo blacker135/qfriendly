@@ -192,8 +192,8 @@ export async function POST(request: Request) {
         const errName = err instanceof Error ? err.name : 'Unknown';
         const errStack = err instanceof Error ? err.stack : '';
         console.error('Stream error:', { name: errName, message: errMessage, stack: errStack });
-        // 将实际错误信息发送给客户端以便诊断
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: 'AI stream generation failed', detail: errMessage, type: errName })}\n\n`));
+        // 将实际错误直接放入 error 字段，客户端无需修改即可显示
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: `AI stream generation failed: [${errName}] ${errMessage}` })}\n\n`));
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
       } finally {
         controller.close();
