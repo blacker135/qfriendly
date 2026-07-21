@@ -29,6 +29,9 @@ describe('Expert Prompts', () => {
     // 每种语言提示词应包含四步框架中的关键步骤
     expect(en.toLowerCase()).toContain('gather information');
     expect(zh).toContain('收集信息');
+    // 步骤 3：确定矛盾
+    expect(en.toLowerCase()).toContain('core tension');
+    expect(zh).toContain('确定矛盾');
   });
 
   // ---------- 切换提示词占位符替换 ----------
