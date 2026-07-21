@@ -1,6 +1,6 @@
 ---
-最后更新: 2026-07-15
-对应 commit: 7e67481
+最后更新: 2026-07-21
+对应 commit: (待提交后更新)
 覆盖模块: UI 组件体系 + 页面结构
 ---
 
@@ -11,6 +11,7 @@
 - 深色主题为主，`globals.css` 中定义基础变量
 - 响应式布局，移动端适配
 - 动画: Framer Motion（入场/过渡/滚动触发）
+- 四位 AI 专家（Evan 倾听者 / Liam 引路人 / Noah 建构师 / Adrian 急救专家），深色主题下各以品牌色 + emoji 区分（🟦🟩🟨🟥）
 - Markdown 渲染: react-markdown + remark-gfm（AI 回复中的格式化文本）
 - 图表: Recharts（管理后台数据可视化）
 
