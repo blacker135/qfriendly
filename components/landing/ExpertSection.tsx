@@ -25,7 +25,7 @@ export function ExpertSection({ lang }: { lang: string }) {
   const t = useTranslations('experts');
 
   return (
-    <section className="py-24">
+    <section id="expert-section" className="py-24">
       <div className="mx-auto max-w-6xl px-6">
         {/* 区域标题 */}
         <motion.div

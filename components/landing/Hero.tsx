@@ -59,20 +59,28 @@ export function Hero({ lang }: { lang: string }) {
           {t('subtitle')}
         </p>
 
-        {/* CTA 按钮 + 底部提示文字 */}
+        {/* CTA 双按钮 */}
         <motion.div
-          className="mt-10"
+          className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
         >
+          {/* 主按钮：开始聊天 → 跳转到 Evan（最轻松的倾听者，适合所有人进入） */}
           <Link
-            href={`/${lang}/chat/liam`}
+            href={`/${lang}/chat/evan`}
             className="inline-block rounded-[16px] bg-[#FF7A59] px-8 py-4 text-lg font-medium text-white shadow-soft transition-all hover:bg-[#FF7A59]/90 hover:shadow-lg"
           >
             {t('cta')} &rarr;
           </Link>
 
+          {/* 次按钮：了解更多 → 平滑滚动到 ExpertSection */}
+          <a
+            href="#expert-section"
+            className="inline-block rounded-[16px] border border-[#FF7A59]/20 bg-white px-8 py-4 text-lg font-medium text-[#FF7A59] shadow-soft transition-all hover:bg-[#FF7A59]/5 hover:shadow-lg"
+          >
+            {t('ctaSecondary')} &darr;
+          </a>
         </motion.div>
       </motion.div>
 
