@@ -187,13 +187,11 @@ export async function POST(request: Request) {
 
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
       } catch (err) {
-        // 诊断日志：记录完整错误信息以定位根因
+        // 记录完整错误信息以便排查
         const errMessage = err instanceof Error ? err.message : String(err);
-        const errName = err instanceof Error ? err.name : 'Unknown';
-        const errStack = err instanceof Error ? err.stack : '';
-        console.error('Stream error:', { name: errName, message: errMessage, stack: errStack });
-        // 将实际错误直接放入 error 字段，客户端无需修改即可显示
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: `AI stream generation failed: [${errName}] ${errMessage}` })}\n\n`));
+        console.error('Stream error:', errMessage);
+        // 将错误信息传递给客户端
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: `AI stream generation failed: ${errMessage}` })}\n\n`));
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
       } finally {
         controller.close();
