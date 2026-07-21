@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "QFriendly — AI 爱情关系指导",
-    "description": "专注爱情关系的建立、维护、促进与拯救。四位 AI 专家，四种视角，帮你应对感情中的每一个阶段。",
+    "title": "QFriendly — 懂你每一种心情",
+    "description": "个人成长、恋爱关系、家庭沟通、职场人际、老年陪伴——四位 AI 专家，随时倾听，认真回应。",
     "siteName": "QFriendly"
   },
 
@@ -12,17 +12,18 @@
     "language": "语言",
     "login": "登录",
     "signup": "开始使用",
-    "startChat": "开始对话",
+    "startChat": "开始聊天",
     "logout": "退出登录",
     "userMenu": "用户菜单",
     "pricing": "定价"
   },
 
   "hero": {
-    "badge": "AI 爱情关系指导",
-    "title": "感情世界很复杂，你不必独自面对。",
-    "subtitle": "专注爱情关系的建立、维护、促进与拯救——四位 AI 专家，四种视角，帮你应对感情中的每一个阶段。",
-    "cta": "与 Liam 聊聊"
+    "badge": "懂你每一种心情",
+    "title": "生活里每一个困惑，都值得被认真倾听",
+    "subtitle": "无论你在成长中迷茫、在关系里挣扎、在职场中心累，还是只想找个人说说话——这里总有人认真听",
+    "cta": "开始聊天",
+    "ctaSecondary": "了解更多"
   },
 
   "trust": {
