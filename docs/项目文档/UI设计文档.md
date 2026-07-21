@@ -1,6 +1,6 @@
 ---
 最后更新: 2026-07-21
-对应 commit: b597f25
+对应 commit: 742c385
 覆盖模块: UI 组件体系 + 页面结构
 ---
 
@@ -36,6 +36,7 @@
 - `ErrorBoundary` — 错误边界
 
 ### landing（落地页）
+- 品牌标语：**懂你每一种心情 · Every Feeling, Understood**，Hero 双按钮（开始聊天 → Evan / 了解更多 ↓）
 - `Hero` — 主视觉区（标题 + CTA）
 - `ExpertSection` + `ExpertCard` — 四位专家展示卡片
 - `CaseStudies` — 使用场景案例
