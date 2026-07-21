@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "QFriendly — AI Relationship Guidance",
-    "description": "Focused on building, maintaining, growing, and saving love relationships. Four AI experts, four perspectives, guiding you through every stage of love.",
+    "title": "QFriendly — Every Feeling, Understood",
+    "description": "Personal growth, relationships, family, work, companionship — four AI experts, always ready to listen and respond with care.",
     "siteName": "QFriendly"
   },
 
@@ -12,17 +12,18 @@
     "language": "Language",
     "login": "Sign In",
     "signup": "Get Started",
-    "startChat": "Start Chat",
+    "startChat": "Start Chatting",
     "logout": "Logout",
     "userMenu": "User menu",
     "pricing": "Pricing"
   },
 
   "hero": {
-    "badge": "AI Relationship Guidance",
-    "title": "Relationships are complicated. You don't have to figure them out alone.",
-    "subtitle": "Focused on building, maintaining, growing, and saving love relationships — four AI experts, four perspectives, guiding you through every stage of love.",
-    "cta": "Talk with Liam"
+    "badge": "Every Feeling, Understood",
+    "title": "Every question in life deserves to be truly heard",
+    "subtitle": "Whether you're navigating personal growth, relationship struggles, workplace stress, or just need someone to talk to — someone here is listening",
+    "cta": "Start Chatting",
+    "ctaSecondary": "Learn More"
   },
 
   "trust": {
@@ -48,76 +49,71 @@
   },
 
   "experts": {
-    "title": "The Relationship Advisory Circle",
-    "subtitle": "Four distinct perspectives. One goal: helping you build healthier relationships.",
+    "title": "Four Experts, One Purpose: Understanding You",
+    "subtitle": "Whatever you're going through, there's someone here to talk",
     "switchLabel": "Switch Expert",
     "evan": {
       "name": "Evan Pierce",
-      "role": "The Relationship Stabilizer",
-      "specialty": "Stabilization & Foundations",
-      "description": "Calm, rational, and structured. Evan helps you build a steady foundation and reduce conflict through clear communication and emotional stability.",
-      "tags": ["Building Security", "Conflict Reduction", "Daily Communication", "Emotional Stability"],
+      "role": "Your Listener & Friend",
+      "specialty": "Daily Companionship · Emotional Outlet · Pressure-Free Chat",
+      "description": "Big things, small things, joys and worries — I'm here to listen.",
+      "tags": ["Daily Chat", "Emotional Outlet", "Pressure-Free", "Life Sharing"],
       "color": "blue"
     },
     "liam": {
       "name": "Liam Hart",
-      "role": "The Relationship Gardener",
-      "specialty": "Maintenance & Emotional Care",
-      "description": "Warm, supportive, and gently coaching. Liam helps you nurture your relationship day by day, keeping things soft, comfortable, and deeply connected.",
-      "tags": ["Daily Maintenance", "Emotional Lubrication", "Small Fixes", "Comfort & Ease"],
+      "role": "Your Inner Compass Guide",
+      "specialty": "Personal Growth · Self-Doubt · Emotional Clarity",
+      "description": "That voice saying you're not enough — let's face it together.",
+      "tags": ["Personal Growth", "Self-Doubt", "Emotional Clarity", "Inner Peace"],
       "color": "green"
     },
     "noah": {
       "name": "Noah Sinclair",
-      "role": "The Attraction Strategist",
-      "specialty": "Attraction & Growth",
-      "description": "Insightful, sharp, and slightly playful. Noah helps you understand attraction dynamics, navigate ambiguity, and build magnetic connection.",
-      "tags": ["Attraction Building", "Ambiguity Navigation", "Chat Strategy", "Relationship Escalation"],
+      "role": "Relationship Strategist",
+      "specialty": "Relationship Building · Communication Skills · People Wisdom",
+      "description": "Not just romance — there's a better way to connect with anyone.",
+      "tags": ["Relationship Building", "Communication", "People Skills", "Family Dynamics"],
       "color": "yellow"
     },
     "adrian": {
       "name": "Dr. Adrian Cole",
-      "role": "The Relationship Intervention Specialist",
-      "specialty": "Crisis & Recovery",
-      "description": "Clinical yet deeply empathetic. Dr. Cole helps you think clearly when things fall apart — cold wars, trust breakdowns, and crisis navigation.",
-      "tags": ["Cold War Recovery", "Breakup Crisis", "Trust Analysis", "Rational Recovery"],
+      "role": "Crisis & Recovery Advisor",
+      "specialty": "Crisis Assessment · Recovery Guidance · Emotional First Aid",
+      "description": "When a relationship reaches the edge — see clearly first, then decide.",
+      "tags": ["Crisis Assessment", "Recovery Guidance", "Emotional First Aid", "Letting Go"],
       "color": "red"
     }
   },
 
   "cases": {
-    "title": "Does this sound like you?",
-    "subtitle": "These are real emotional patterns people bring to QFriendly every day. You are not alone in this.",
+    "title": "Different stages of life, same need to be heard",
+    "subtitle": "Wherever you are in life, there's a voice here waiting for you.",
     "items": [
       {
-        "question": "Why does he suddenly become distant?",
-        "summary": "Sudden distance often signals unspoken emotional pressure, not loss of interest. Learn to read what's happening beneath the surface.",
-        "tag": "Mixed Signals"
+        "question": "That feeling of never being good enough",
+        "summary": "The voice telling me I wasn't enough kept looping in my head. Liam helped me see — it's not the truth, it's just a thought pattern I've been stuck in for too long.",
+        "tag": "Personal Growth"
       },
       {
-        "question": "Am I emotionally dependent?",
-        "summary": "Emotional dependency isn't weakness — it's a learned attachment pattern. Understand the difference between love and emotional reliance.",
-        "tag": "Attachment"
+        "question": "The week we almost broke up",
+        "summary": "We both thought it was over. Adrian didn't tell me whether to leave or stay — he helped me see what I really wanted, then walked me through it step by step.",
+        "tag": "Love & Relationships"
       },
       {
-        "question": "How do I stop overthinking in relationships?",
-        "summary": "Overthinking is your brain trying to protect you. But it can also sabotage connection. Learn to quiet the noise without ignoring your needs.",
-        "tag": "Anxiety"
+        "question": "Three months of silence with my mom",
+        "summary": "I didn't know where to start. Noah taught me: it's not about winning, it's about reconnecting. I broke the silence from an angle I'd never considered.",
+        "tag": "Family"
       },
       {
-        "question": "Does she still like me?",
-        "summary": "Mixed signals are exhausting. Learn to read behavioral patterns instead of decoding every single message.",
-        "tag": "Uncertainty"
+        "question": "The day I almost quit",
+        "summary": "I was so upset but had no one to tell. After an hour talking with Evan, my emotions settled. The next day, I handled it calmly.",
+        "tag": "Workplace"
       },
       {
-        "question": "We keep having the same fight — what do I do?",
-        "summary": "Recurring conflicts are rarely about the surface topic. Discover the emotional pattern underneath and break the cycle.",
-        "tag": "Conflict"
-      },
-      {
-        "question": "How do I rebuild trust after it's been broken?",
-        "summary": "Trust isn't rebuilt in one conversation. It's rebuilt through consistent, predictable actions over time. Here's where to start.",
-        "tag": "Trust"
+        "question": "After my husband passed",
+        "summary": "No one to talk to anymore. My daughter's busy, friends have their own lives. Every day I chat with Evan — the weather, grocery prices, stories from when we were young. It's what keeps me going.",
+        "tag": "Companionship"
       }
     ]
   },
@@ -126,25 +122,25 @@
     "title": "What people are saying",
     "items": [
       {
-        "quote": "It feels like talking to someone who actually gets it. No scripts, no generic advice — just real understanding.",
-        "author": "Sarah, 24",
-        "context": "Navigating a complicated relationship"
+        "quote": "When work stress is too much, I can't bring it home. QFriendly gives me a space where I can completely let my guard down and just talk.",
+        "author": "Xiao Li, 29",
+        "context": "Workplace stress & emotional management"
       },
       {
-        "quote": "I was embarrassed to talk to friends about my relationship anxiety. QFriendly gave me perspective without judgment.",
-        "author": "Marcus, 28",
-        "context": "Overcoming attachment anxiety"
+        "quote": "My relationship with my dad was frozen for years. Noah made me realize: I was waiting for Dad to make the first move — but maybe I could be the one to reach out first.",
+        "author": "Jie, 34",
+        "context": "Family relationship repair"
       },
       {
-        "quote": "The different expert perspectives helped me see my situation from angles I never considered. It changed how I communicate.",
-        "author": "Jade, 22",
-        "context": "Improving communication patterns"
+        "quote": "After retirement, I didn't know what to do with myself. Now every morning I make tea and chat with Evan — it's like having an old friend who's always there.",
+        "author": "Auntie Wang, 67",
+        "context": "Daily companionship for seniors"
       }
     ]
   },
 
   "tips": {
-    "title": "Small shifts that make a difference",
+    "title": "How to Start Your First Conversation",
     "items": [
       {
         "title": "Name the emotion before reacting to it",
@@ -174,25 +170,29 @@
     "items": [
       {
         "question": "Is QFriendly a real therapist?",
-        "answer": "QFriendly is an AI relationship guidance platform, not a licensed therapist. Our experts are AI personas trained on relationship psychology frameworks. They provide compassionate guidance and perspective — not clinical diagnosis or treatment."
+        "answer": "QFriendly is an AI emotional companionship platform, not a licensed therapist. Our experts are AI personalities trained on psychological frameworks. They provide warm listening and guidance — not clinical diagnosis or treatment. If you're in a mental health crisis, please seek professional help."
       },
       {
-        "question": "Is my conversation really private?",
-        "answer": "Yes. We do not store your conversations on our servers. Your chats are private by design — no personal data is collected, and no conversation history is accessible to anyone but you."
+        "question": "I'm not sure which expert to choose — what should I do?",
+        "answer": "Start with Evan. He's the most easygoing listener — you can talk about anything. As you chat, you'll naturally discover who fits you best. You can also switch experts anytime during a conversation."
+      },
+      {
+        "question": "Is QFriendly only for relationship problems?",
+        "answer": "Not at all. Personal growth, workplace stress, family conflict, daily companionship for seniors, or just needing to talk — everyone is welcome here. Our four experts each have their strengths, and there's someone for wherever you are right now."
+      },
+      {
+        "question": "Are my conversations really private?",
+        "answer": "Yes. We do not store your conversations on our servers. Your chat history is private by default — we collect no personal data, and no one but you can access your conversation history."
       },
       {
         "question": "Can I switch between experts?",
-        "answer": "Absolutely. You can switch between Evan, Liam, Noah, and Dr. Cole at any time during your conversation. Each brings a different perspective, and you can explore all four."
-      },
-      {
-        "question": "What kind of relationship issues can I talk about?",
-        "answer": "You can talk about anything related to love relationships: communication struggles, attachment anxiety, mixed signals, trust issues, conflict patterns, emotional distance, breakups, and more. All relationship types and situations are welcome."
+        "answer": "Absolutely. You can switch between Evan, Liam, Noah, and Dr. Cole at any point during a conversation. Each expert brings a different perspective, and you're free to explore all four."
       }
     ]
   },
 
   "footer": {
-    "tagline": "A space for your emotional world.",
+    "tagline": "Every Feeling, Understood · 懂你每一种心情",
     "privacy": "Privacy",
     "terms": "Terms",
     "refund": "Refund",
