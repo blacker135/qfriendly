@@ -187,8 +187,13 @@ export async function POST(request: Request) {
 
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
       } catch (err) {
-        console.error('Stream error:', err);
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: 'AI stream generation failed' })}\n\n`));
+        // 诊断日志：记录完整错误信息以定位根因
+        const errMessage = err instanceof Error ? err.message : String(err);
+        const errName = err instanceof Error ? err.name : 'Unknown';
+        const errStack = err instanceof Error ? err.stack : '';
+        console.error('Stream error:', { name: errName, message: errMessage, stack: errStack });
+        // 将实际错误信息发送给客户端以便诊断
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: 'AI stream generation failed', detail: errMessage, type: errName })}\n\n`));
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
       } finally {
         controller.close();
