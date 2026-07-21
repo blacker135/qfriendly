@@ -35,29 +35,29 @@ const EXPERT_INFO: Record<ExpertId, { name: string; title: { en: string; zh: str
   evan: {
     name: 'Evan Pierce',
     title: {
-      en: 'The Relationship Stabilizer',
-      zh: '情感稳定者',
+      en: 'Your Listener & Friend',
+      zh: '你的人生倾听者',
     },
   },
   liam: {
     name: 'Liam Hart',
     title: {
-      en: 'The Relationship Gardener',
-      zh: '情感园丁',
+      en: 'Your Inner Compass Guide',
+      zh: '你的内心引路人',
     },
   },
   noah: {
     name: 'Noah Sinclair',
     title: {
-      en: 'The Attraction Strategist',
-      zh: '吸引策略师',
+      en: 'The Relationship Architect',
+      zh: '关系建构师',
     },
   },
   adrian: {
     name: 'Dr. Adrian Cole',
     title: {
-      en: 'The Relationship Intervention Specialist',
-      zh: '情感干预专家',
+      en: 'The Relationship Emergency Specialist',
+      zh: '关系急救专家',
     },
   },
 };
