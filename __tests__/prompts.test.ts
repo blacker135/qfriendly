@@ -14,13 +14,21 @@ describe('Expert Prompts', () => {
   it.each(experts)('%s should have en and zh prompts', (expert) => {
     const en = getExpertPrompt(expert, 'en');
     const zh = getExpertPrompt(expert, 'zh');
-    // 每种语言的提示词应超过 100 个字符
-    expect(en.length).toBeGreaterThan(100);
-    expect(zh.length).toBeGreaterThan(100);
-    // 英文提示词应包含 "Reply in English"
-    expect(en).toContain('Reply in English');
-    // 中文提示词应包含 "用中文回复"
-    expect(zh).toContain('用中文回复');
+    // 每种语言的提示词应超过 500 个字符（新 prompt 包含完整流程+原则+工具）
+    expect(en.length).toBeGreaterThan(500);
+    expect(zh.length).toBeGreaterThan(500);
+    // 英文提示词应包含专家名称
+    const expertNames: Record<string, string> = {
+      evan: 'Evan Pierce',
+      liam: 'Liam Hart',
+      noah: 'Noah Sinclair',
+      adrian: 'Adrian Cole',
+    };
+    expect(en).toContain(expertNames[expert]);
+    expect(zh).toContain(expertNames[expert]);
+    // 每种语言提示词应包含四步框架中的关键步骤
+    expect(en.toLowerCase()).toContain('gather information');
+    expect(zh).toContain('收集信息');
   });
 
   // ---------- 切换提示词占位符替换 ----------
